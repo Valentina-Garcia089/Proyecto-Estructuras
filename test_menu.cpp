@@ -2,7 +2,7 @@
 #include <sstream>
 #include <string>
 
-#include "menu_commands.hxx"
+#include "menu_commands.h"
 
 
 using namespace std;

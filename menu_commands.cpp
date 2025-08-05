@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "menu_commands.hxx"
+#include "menu_commands.h"
 
 
 // Ayudas para cada momento en el que el usuario se encuentre en el menú
