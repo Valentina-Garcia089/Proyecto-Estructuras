@@ -2,10 +2,12 @@
 #include <sstream>
 
 #include "menu_commands.h"
+#include <string>
 
+using namespace std;
 
 // Ayudas para cada momento en el que el usuario se encuentre en el menú
-void comandoAyuda(std::string argumento, int momento) {
+void comandoAyuda(string argumento, int momento) {
     if(argumento == "salir"){
         printf("Uso: salir\n");
         printf("Descripción: salida del programa.\n");
@@ -63,4 +65,16 @@ void comandoAyuda(std::string argumento, int momento) {
 void comandoNoReconocido(){
     printf("Comando no reconocido. Escribe 'ayuda' para ver las opciones de comandos.\n");
     printf("Si necesitas ayuda con un comando especifico, escribe 'ayuda <comando>'\n");
+}
+
+
+
+// La función 
+bool archivoCorrecto(string argumento){
+    // Devuelve la posición de la cadena a buscar
+    // Si no la encuentr devuelve string::npos que es un número muy grande
+    if(argumento.find(".fa") != string::npos || argumento.find(".fasta") != string::npos){
+        return true;
+    }
+    return false;
 }

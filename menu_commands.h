@@ -3,9 +3,13 @@
 #define MENU_COMMANDS_H
 
 #include <iostream>
+#include <string>
 
-void comandoAyuda(std::string argumento, int momento);
+using namespace std;
+
+void comandoAyuda(string argumento, int momento);
 void comandoNoReconocido();
+bool archivoCorrecto(string argumento);
 
 
 
