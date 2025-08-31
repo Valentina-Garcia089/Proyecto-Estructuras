@@ -8,11 +8,8 @@
 using namespace std;
 
 class ArchivoFasta {
-    private:
-        vector <SecuenciaGenetica> secuencias;
-
     public:
-        bool cargaDeArchivo(string archivito);
+        vector <SecuenciaGenetica> cargaDeArchivo(string archivito);
 };
 
 #endif
