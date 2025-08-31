@@ -11,6 +11,7 @@ bool Sistema::cargaDeArchivo(string archivito){
     string linea;
     string codigo = "";
     SecuenciaGenetica sec;
+    vector<char> datos;
 
     if(!archivo.is_open()){
         printf("No fue posible abrir el archivo\n");
@@ -20,9 +21,19 @@ bool Sistema::cargaDeArchivo(string archivito){
     while(getline(archivo, linea)) {// Se leerá linea por linea
         if((linea[0] == '>') || (archivo.peek() == EOF)) { // Si al iniciar una linea, se encuentra este caracter en la posición 0:
             if(!codigo.empty() ){
-                sec.setDatos(codigo);
+
+                // Guardado de caracteres en el vector de chars
+                for (char c : codigo) {
+                    datos.push_back(c);
+                }
+
+                // Guardado de la secuencia en el objeto 
+                sec.setDatos(datos);
                 conjuntoSecuencias.push_back(sec);
+
+                // Reinicio de variables para la próxima secuencia
                 codigo = "";
+                datos.clear();
             }
             sec.setNombre(linea.substr(1)); // Guardará el nombre después del caracter
         }
@@ -39,10 +50,20 @@ bool Sistema::cargaDeArchivo(string archivito){
 void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
     vector <SecuenciaGenetica>::iterator it;
     it = secuencias.begin();
+    vector <char>::iterator it_char;
+    string dato = "";
 
+    //Iteración del vector con iteradores
     for (; it != secuencias.end(); it++){
         cout << it->getNombre() << "\n";
-        cout << it->getDatos() << "\n";
+        
+        //Armado y imprimido de la secuencia con caracteres del vector mediante iteradores
+        it_char = it->getDatos().begin();
+        for (; it_char != it->getDatos().end(); it_char++){
+            dato += *it_char;
+        }
+        cout << dato << "\n";
+        dato = "";
     }
 }
 

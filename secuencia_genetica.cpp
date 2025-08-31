@@ -1,11 +1,12 @@
 #include "tad_secuencia_genetica.h"
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
 SecuenciaGenetica::SecuenciaGenetica() {
     nombre = "";
-    datos = "";
+    datos = {};
 }
 
 // Implementación de los getters y setters del TAD de secuencia genetica
@@ -14,7 +15,7 @@ void SecuenciaGenetica::setNombre(string nombre){
     this->nombre = nombre;
 }
 
-void SecuenciaGenetica::setDatos(string datos){
+void SecuenciaGenetica::setDatos(vector<char> datos){
     this->datos = datos;
 }
 
@@ -22,6 +23,6 @@ string SecuenciaGenetica::getNombre(){
     return nombre;
 }
 
-string SecuenciaGenetica::getDatos(){
+vector<char> SecuenciaGenetica::getDatos(){
     return datos;
 }

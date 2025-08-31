@@ -2,6 +2,7 @@
 #define __TAD_SECUENCIA_GENETICA__H__
 
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -13,15 +14,15 @@ class SecuenciaGenetica {
 
         // Getters y setters:
         void setNombre(string nombre);
-        void setDatos(string datos);
+        void setDatos(vector<char> datos);
         string getNombre();
-        string getDatos();
+        vector<char> getDatos();
 
 
     // Datos protegidos
     private:
         string nombre;
-        string datos;
+        vector<char> datos;
 };
 
 #endif
