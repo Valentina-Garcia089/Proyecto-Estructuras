@@ -18,10 +18,11 @@ vector <SecuenciaGenetica> ArchivoFasta::cargaDeArchivo(string archivito){
     }
     
     while(getline(archivo, linea)) {// Se leerá linea por linea
-        if(linea[0] == '>') { // Si al iniciar una linea, se encuentra este caracter en la posición 0:
-            if(!codigo.empty()){
+        if((linea[0] == '>') || (archivo.peek() == EOF)) { // Si al iniciar una linea, se encuentra este caracter en la posición 0:
+            if(!codigo.empty() ){
                 sec.setDatos(codigo);
                 secuenciaRetorno.push_back(sec);
+                codigo = "";
             }
             sec.setNombre(linea.substr(1)); // Guardará el nombre después del caracter
         }
@@ -31,4 +32,15 @@ vector <SecuenciaGenetica> ArchivoFasta::cargaDeArchivo(string archivito){
     }
 
     return secuenciaRetorno;
+}
+
+void ArchivoFasta::listarSecuencias(vector<SecuenciaGenetica> secuencias){
+    vector <SecuenciaGenetica>::iterator it;
+    it = secuencias.begin();
+
+    for (; it != secuencias.end(); it++){
+        cout << it->getNombre() << "\n";
+        cout << it->getDatos() << "\n";
+    }
+
 }

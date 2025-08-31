@@ -10,6 +10,7 @@ using namespace std;
 class ArchivoFasta {
     public:
         vector <SecuenciaGenetica> cargaDeArchivo(string archivito);
+        void listarSecuencias(vector<SecuenciaGenetica> secuencias);
 };
 
 #endif
