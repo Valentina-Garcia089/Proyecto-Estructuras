@@ -14,6 +14,7 @@ class Sistema {
     public:
         bool cargaDeArchivo(string archivito);
         void listarSecuencias(vector<SecuenciaGenetica> secuencias);
+        void histograma(string nombreSecuencia);
         void contarSubsecuencias(string subsecuencia);
 
         vector <SecuenciaGenetica> obtenerConjuntoSec();

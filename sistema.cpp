@@ -67,6 +67,24 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
     }
 }
 
+
+void Sistema::histograma(string nombreSecuencia){
+    cout << "[" << nombreSecuencia << "] con tamaño " << nombreSecuencia.size() << "\n";
+    for(SecuenciaGenetica& recorre : conjuntoSecuencias){
+        cout << "[" << recorre.getNombre() << "] con tamaño " << recorre.getNombre().size() << "\n";
+        if(recorre.getNombre() == nombreSecuencia){
+            cout << recorre.getNombre();
+            recorre.contarBases();
+
+            for(Base muestraFrec : recorre.getConteo()){
+                cout << muestraFrec.obtenerBase() << ": " << muestraFrec.obtenerFrecuencia() << " repeticiones.\n";
+            }
+        }
+    }
+}
+
+
+
 void Sistema::contarSubsecuencias(string subsecuencia)
 {
     vector<SecuenciaGenetica>::iterator it = conjuntoSecuencias.begin();

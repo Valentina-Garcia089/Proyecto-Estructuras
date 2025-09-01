@@ -41,6 +41,7 @@ int main () {
                         }
                         else if(comando == "histograma" && !argumento.empty()){
                             cout << "Mostrando histograma\n";
+                            sistemita.histograma(argumento);
                         }
                         else if(comando == "es_subsecuencia" && !argumento.empty()){
                             sistemita.contarSubsecuencias(argumento);

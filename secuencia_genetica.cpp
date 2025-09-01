@@ -23,12 +23,38 @@ string SecuenciaGenetica::getNombre(){
     return nombre;
 }
 
+vector <Base> SecuenciaGenetica:: getConteo(){
+    return conteo;
+}
+
 vector<char> SecuenciaGenetica::getDatos(){
     return datos;
 }
 
-int SecuenciaGenetica::contarBases(){
-    
+void SecuenciaGenetica::contarBases(){
+    for(char recorre : datos){
+        Base obj;
+        if(!yaExiste(recorre)){
+            for(char recorre_2 : datos){
+                if(recorre_2 == recorre){
+                    obj.actualizaFrecuencia(); // Cada vez que encuentre la base en la secuencia, está aumentará su frecuencia de uno en uno
+                }
+            }
+            obj.setBase(recorre); // Se le pasa el char en el que estamos
+            conteo.push_back(obj);
+        }
+    }
+}
+
+// Verifica si la base ya está en el vector
+bool SecuenciaGenetica::yaExiste(char base){
+    for(Base recorre : conteo){
+        if(recorre.obtenerBase() == base){
+            return true;
+        }
+    }
+
+    return false;
 }
 
 int SecuenciaGenetica::contarSubsecuencia(const string &s)
