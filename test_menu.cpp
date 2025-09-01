@@ -43,6 +43,7 @@ int main () {
                             cout << "Mostrando histograma\n";
                         }
                         else if(comando == "es_subsecuencia" && !argumento.empty()){
+                            sistemita.contarSubsecuencias(argumento);
                             cout << "La subsecuencia " << argumento << " se repite n veces\n";
                         }
                         else if(comando == "enmascarar" && !argumento.empty()){

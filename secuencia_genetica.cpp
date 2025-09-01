@@ -30,3 +30,29 @@ vector<char> SecuenciaGenetica::getDatos(){
 int SecuenciaGenetica::contarBases(){
     
 }
+
+int SecuenciaGenetica::contarSubsecuencia(const string &s)
+{
+    int count = 0;
+    //Creación de un string a partir de un vector
+    string hola(datos.begin(), datos.end());
+    while (hola.find('\n') != string::npos)
+        hola.erase(hola.find('\n'), 1);
+
+    try
+    {
+        for (size_t t = 0; t <= hola.size()-s.size(); t++){
+            if (s == hola.substr(t, s.size())){
+                count++;
+                t += s.size() - 1; // Evita contar dos veces o de manera repetida
+            }
+        }
+    }
+    catch(const std::exception& e)
+    {
+        return count;
+    } 
+
+    return count;
+    
+}

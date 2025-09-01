@@ -67,7 +67,17 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
     }
 }
 
+void Sistema::contarSubsecuencias(string subsecuencia)
+{
+    vector<SecuenciaGenetica>::iterator it = conjuntoSecuencias.begin();
+    int total = 0;
 
+    for (; it != conjuntoSecuencias.end(); it++){
+        total += it->contarSubsecuencia(subsecuencia);
+    }
+
+    printf("Total de ocurrencias de las secuencias es :%d\n", total);
+}
 
 vector <SecuenciaGenetica> Sistema:: obtenerConjuntoSec(){
     return conjuntoSecuencias;
