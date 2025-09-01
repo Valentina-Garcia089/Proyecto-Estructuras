@@ -34,8 +34,10 @@ vector<char> SecuenciaGenetica::getDatos(){
 void SecuenciaGenetica::contarBases(){
     for(char recorre : datos){
         Base obj;
+        if (recorre == '\n') continue; // Se ignoran los saltos de línea
         if(!yaExiste(recorre)){
             for(char recorre_2 : datos){
+                //if (recorre_2 == '\n') continue; // Se ignoran los saltos de línea
                 if(recorre_2 == recorre){
                     obj.actualizaFrecuencia(); // Cada vez que encuentre la base en la secuencia, está aumentará su frecuencia de uno en uno
                 }
@@ -49,7 +51,7 @@ void SecuenciaGenetica::contarBases(){
 // Verifica si la base ya está en el vector
 bool SecuenciaGenetica::yaExiste(char base){
     for(Base recorre : conteo){
-        if(recorre.obtenerBase() == base){
+        if((recorre.obtenerBase() == base)){ // Se ignoran los saltos de línea
             return true;
         }
     }

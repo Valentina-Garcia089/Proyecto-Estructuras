@@ -57,21 +57,26 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
     for (; it != secuencias.end(); it++){
         cout << it->getNombre() << "\n";
         
+        string datos(it->getDatos().data(), it->getDatos().size());
+        cout << datos << "\n";
+        
         //Armado y imprimido de la secuencia con caracteres del vector mediante iteradores
-        it_char = it->getDatos().begin();
+        /* it_char = it->getDatos().begin();
         for (; it_char != it->getDatos().end(); it_char++){
-            dato += *it_char;
+
+            dato+=(*it_char);
+            
         }
-        cout << dato << "\n";
-        dato = "";
+        dato += "\0"; */
+
+        /* cout << dato << "\n";
+        dato = ""; */
     }
 }
 
 
 void Sistema::histograma(string nombreSecuencia){
-    cout << "[" << nombreSecuencia << "] con tamaño " << nombreSecuencia.size() << "\n";
     for(SecuenciaGenetica& recorre : conjuntoSecuencias){
-        cout << "[" << recorre.getNombre() << "] con tamaño " << recorre.getNombre().size() << "\n";
         if(recorre.getNombre() == nombreSecuencia){
             cout << recorre.getNombre();
             recorre.contarBases();
