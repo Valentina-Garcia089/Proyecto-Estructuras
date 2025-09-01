@@ -26,3 +26,7 @@ string SecuenciaGenetica::getNombre(){
 vector<char> SecuenciaGenetica::getDatos(){
     return datos;
 }
+
+int SecuenciaGenetica::contarBases(){
+    
+}

@@ -17,6 +17,7 @@ class SecuenciaGenetica {
         void setDatos(vector<char> datos);
         string getNombre();
         vector<char> getDatos();
+        int contarBases();
 
 
     // Datos protegidos
