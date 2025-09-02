@@ -77,12 +77,12 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
 
 void Sistema::histograma(string nombreSecuencia){
     for(SecuenciaGenetica& recorre : conjuntoSecuencias){
-        if(recorre.getNombre() == nombreSecuencia){
+        if(recorre.getNombre() == nombreSecuencia || recorre.getNombre() == nombreSecuencia + "\n"){
             cout << recorre.getNombre();
             recorre.contarBases();
 
-            for(Base muestraFrec : recorre.getConteo()){
-                cout << muestraFrec.obtenerBase() << ": " << muestraFrec.obtenerFrecuencia() << " repeticiones.\n";
+            for(Base& muestraFrec : recorre.getConteo()){
+                cout << "\n" << muestraFrec.obtenerBase() << ": " << muestraFrec.obtenerFrecuencia() << " repeticiones.\n";
             }
         }
     }

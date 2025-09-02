@@ -11,7 +11,7 @@ class Base {
         int frecuencia;
     
     public:
-        Base();
+        Base(char base, int frecuencia);
         char obtenerBase();
         int obtenerFrecuencia();
         void setBase(char base);

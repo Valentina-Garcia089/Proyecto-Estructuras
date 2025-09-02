@@ -22,9 +22,6 @@ class SecuenciaGenetica {
         void contarBases();
         int contarSubsecuencia(const string &s);
 
-        //Se requiere de una función que verifique si la base ya se encuentra en la colección de conteo
-        bool yaExiste(char base);
-
     // Datos protegidos
     private:
         string nombre;

@@ -7,6 +7,7 @@ using namespace std;
 SecuenciaGenetica::SecuenciaGenetica() {
     nombre = "";
     datos = {};
+    conteo = {Base('A', 0), Base('C', 0), Base('G', 0), Base('T', 0), Base('U', 0), Base('R', 0), Base('Y', 0), Base('K', 0), Base('M', 0), Base('S', 0), Base('W', 0), Base('B', 0), Base('D', 0), Base('H', 0), Base('V', 0), Base('N', 0), Base('X', 0), Base('-', 0) }; // Inicialización del vector de bases con las cuatro bases y frecuencia 0
 }
 
 // Implementación de los getters y setters del TAD de secuencia genetica
@@ -32,32 +33,17 @@ vector<char> SecuenciaGenetica::getDatos(){
 }
 
 void SecuenciaGenetica::contarBases(){
-    for(char recorre : datos){
-        Base obj;
-        if (recorre == '\n') continue; // Se ignoran los saltos de línea
-        if(!yaExiste(recorre)){
-            for(char recorre_2 : datos){
-                //if (recorre_2 == '\n') continue; // Se ignoran los saltos de línea
-                if(recorre_2 == recorre){
-                    obj.actualizaFrecuencia(); // Cada vez que encuentre la base en la secuencia, está aumentará su frecuencia de uno en uno
-                }
-            }
-            obj.setBase(recorre); // Se le pasa el char en el que estamos
-            conteo.push_back(obj);
-        }
-    }
-}
-
-// Verifica si la base ya está en el vector
-bool SecuenciaGenetica::yaExiste(char base){
     for(Base recorre : conteo){
-        if((recorre.obtenerBase() == base)){ // Se ignoran los saltos de línea
-            return true;
+        for(char recorre_2 : datos){
+            if(recorre_2 == '\n') continue; // Se ignoran los saltos de línea
+            if(recorre.obtenerBase() == recorre_2){
+                recorre.actualizaFrecuencia();
+            }
         }
     }
-
-    return false;
 }
+
+
 
 int SecuenciaGenetica::contarSubsecuencia(const string &s)
 {

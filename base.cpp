@@ -4,8 +4,9 @@
 
 using namespace std;
 
-Base::Base(){
-    frecuencia = 0;
+Base::Base(char base, int frecuencia){
+    this->base = base;
+    this->frecuencia = frecuencia;
 }
 
 
