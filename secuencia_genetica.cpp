@@ -7,7 +7,24 @@ using namespace std;
 SecuenciaGenetica::SecuenciaGenetica() {
     nombre = "";
     datos = {};
-    conteo = {Base('A', 0), Base('C', 0), Base('G', 0), Base('T', 0), Base('U', 0), Base('R', 0), Base('Y', 0), Base('K', 0), Base('M', 0), Base('S', 0), Base('W', 0), Base('B', 0), Base('D', 0), Base('H', 0), Base('V', 0), Base('N', 0), Base('X', 0), Base('-', 0) }; 
+    conteo = {Base('A', 0, {'A'}),
+             Base('C', 0, {'C'}), 
+             Base('G', 0, {'G'}), 
+             Base('T', 0, {'T'}), 
+             Base('U', 0, {'U'}), 
+             Base('R', 0, {'A', 'G'}), 
+             Base('Y', 0, {'C', 'T', 'U'}), 
+             Base('K', 0, {'G', 'T', 'U'}), 
+             Base('M', 0, {'A', 'C'}), 
+             Base('S', 0, {'C', 'G'}), 
+             Base('W', 0, {'A', 'T', 'U'}), 
+             Base('B', 0, {'C', 'G', 'T', 'U'}), 
+             Base('D', 0, {'A', 'G', 'T', 'U'}), 
+             Base('H', 0, {'A', 'C', 'T', 'U'}), 
+             Base('V', 0, {'A', 'C', 'G'}), 
+             Base('N', 0, {'A', 'C', 'G', 'T', 'U'}), 
+             Base('X', 0, {'X'}), 
+             Base('-', 0, {'-'})}; 
 }
 
 // Implementación de los getters y setters del TAD de secuencia genetica
@@ -45,7 +62,7 @@ void SecuenciaGenetica::contarBases(){
 
 
 
-int SecuenciaGenetica::contarSubsecuencia(const string &s)
+int SecuenciaGenetica::esSubsecuencia(const string &s)
 {
     int count = 0;
     //Creación de un string a partir de un vector

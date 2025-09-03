@@ -20,7 +20,7 @@ class SecuenciaGenetica {
         vector <Base> getConteo();
         vector<char> getDatos();
         void contarBases();
-        int contarSubsecuencia(const string &s);
+        int esSubsecuencia(const string &s);
 
     // Datos protegidos
     private:

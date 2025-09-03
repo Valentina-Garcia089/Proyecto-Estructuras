@@ -4,9 +4,10 @@
 
 using namespace std;
 
-Base::Base(char base, int frecuencia){
+Base::Base(char base, int frecuencia, vector<char> representa) {
     this->base = base;
     this->frecuencia = frecuencia;
+    this->representa = representa;
 }
 
 
