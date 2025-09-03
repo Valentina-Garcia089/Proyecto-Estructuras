@@ -16,6 +16,8 @@ class Sistema {
         void listarSecuencias(vector<SecuenciaGenetica> secuencias);
         void histograma(string nombreSecuencia);
         void contarSubsecuencias(string subsecuencia);
+        bool verificarSecuencias(string secuencia);
+        int verificaJustificacion(string secuencia);
 
         vector <SecuenciaGenetica> obtenerConjuntoSec();
 };
