@@ -15,7 +15,8 @@ bool Sistema::cargaDeArchivo(string archivito){
     int anchoJustificacion = 0;
 
     if(!archivo.is_open()){
-        printf("No fue posible abrir el archivo\n");
+        cout << archivito << " "; 
+        printf("no se encuentra o no puede leerse\n");
         return false;
     }
     
