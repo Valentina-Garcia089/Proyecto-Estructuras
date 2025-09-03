@@ -26,9 +26,7 @@ bool Sistema::cargaDeArchivo(string archivito){
                 if (archivo.peek() == EOF) {
                     codigo += linea; // Añade la última línea leída si es parte del código
                 }
-
-                cout << codigo << "\n";
-
+                
                 // Verifica que la secuencia solo contenga caracteres válidos
                 if (verificarSecuencias(codigo) == false) {
                     cout << "El archivo contiene caracteres no validos. Archivo no cargado.\n";
@@ -66,6 +64,7 @@ bool Sistema::cargaDeArchivo(string archivito){
         }
     }
 
+    cout << conjuntoSecuencias.size() << " secuencias cargadas correctamente de " << archivito << '\n';
     return true;
 }
 
