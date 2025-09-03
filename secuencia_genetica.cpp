@@ -7,7 +7,7 @@ using namespace std;
 SecuenciaGenetica::SecuenciaGenetica() {
     nombre = "";
     datos = {};
-    conteo = {Base('A', 0), Base('C', 0), Base('G', 0), Base('T', 0), Base('U', 0), Base('R', 0), Base('Y', 0), Base('K', 0), Base('M', 0), Base('S', 0), Base('W', 0), Base('B', 0), Base('D', 0), Base('H', 0), Base('V', 0), Base('N', 0), Base('X', 0), Base('-', 0) }; // Inicialización del vector de bases con las cuatro bases y frecuencia 0
+    conteo = {Base('A', 0), Base('C', 0), Base('G', 0), Base('T', 0), Base('U', 0), Base('R', 0), Base('Y', 0), Base('K', 0), Base('M', 0), Base('S', 0), Base('W', 0), Base('B', 0), Base('D', 0), Base('H', 0), Base('V', 0), Base('N', 0), Base('X', 0), Base('-', 0) }; 
 }
 
 // Implementación de los getters y setters del TAD de secuencia genetica
@@ -33,7 +33,7 @@ vector<char> SecuenciaGenetica::getDatos(){
 }
 
 void SecuenciaGenetica::contarBases(){
-    for(Base recorre : conteo){
+    for(Base& recorre : conteo){
         for(char recorre_2 : datos){
             if(recorre_2 == '\n') continue; // Se ignoran los saltos de línea
             if(recorre.obtenerBase() == recorre_2){
