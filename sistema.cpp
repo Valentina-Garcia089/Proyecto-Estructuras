@@ -12,6 +12,7 @@ bool Sistema::cargaDeArchivo(string archivito){
     string codigo = "";
     SecuenciaGenetica sec;
     vector<char> datos = {};
+    int anchoJustificacion = 0;
 
     if(!archivo.is_open()){
         printf("No fue posible abrir el archivo\n");
@@ -21,6 +22,10 @@ bool Sistema::cargaDeArchivo(string archivito){
     while(getline(archivo, linea)) {// Se leerá linea por linea
         if((linea[0] == '>') || archivo.peek() == EOF) { // Si al iniciar una linea, se encuentra este caracter en la posición 0:
             if(!codigo.empty()){
+
+                if (archivo.peek() == EOF) {
+                    codigo += linea; // Añade la última línea leída si es parte del código
+                }
 
                 cout << codigo << "\n";
 
@@ -32,7 +37,8 @@ bool Sistema::cargaDeArchivo(string archivito){
                 }
 
                 //Verifica que las lineas código cumplan con la justificación (anchura)
-                if (verificaJustificacion(codigo) == -1) {
+                anchoJustificacion = verificaJustificacion(codigo);
+                if (anchoJustificacion == -1) {
                     cout << "El archivo contiene secuencias no justificadas. Archivo no cargado.\n";
                     conjuntoSecuencias.clear();
                     return false;
@@ -46,6 +52,7 @@ bool Sistema::cargaDeArchivo(string archivito){
                 
                 // Guardado de la secuencia en el objeto 
                 sec.setDatos(datos);
+                sec.setAnchoJustificacion(anchoJustificacion);
                 conjuntoSecuencias.push_back(sec);
 
                 // Reinicio de variables para la próxima secuencia
@@ -103,7 +110,7 @@ void Sistema::contarSubsecuencias(string subsecuencia)
     int total = 0;
 
     for (; it != conjuntoSecuencias.end(); it++){
-        total += it->contarSubsecuencia(subsecuencia);
+        total += it->esSubsecuencia(subsecuencia);
     }
 
     printf("Total de ocurrencias de las secuencias es :%d\n", total);
@@ -111,11 +118,13 @@ void Sistema::contarSubsecuencias(string subsecuencia)
 
 bool Sistema::verificarSecuencias(string secuencia)
 {
+    //Podría ser un string
     vector<char> bases_validas = {'A', 'C', 'G', 'T', 'U', 'R', 'Y', 'K', 'M', 'S', 'W', 
                                   'B', 'D', 'H', 'V', 'N', 'X', '-', '\n'};
 
     string caracteresValidos(bases_validas.begin(), bases_validas.end());
 
+    //Verifica que cada carácter en la secuencia sea un carácter válido
     for (char c : secuencia) {
         if (caracteresValidos.find(c) == string::npos){
             return false; // Carácter no válido encontrado
@@ -130,21 +139,37 @@ int Sistema::verificaJustificacion(string secuencia)
     vector<size_t> tam;
     size_t inicio = 0;
     size_t pos = 0;
+
+    // Búsqueda de líneas en la secuencia
     while ((pos = secuencia.find('\n', inicio)) != string::npos) {
+        //Va añadiendo los tamaños de las líneas encontradas
         tam.push_back(pos - inicio);
+
+        //Cambia el inicio para la siguiente busqueda
         inicio = pos + 1;
     }
-    // Si hay texto después del último '\n', cuenta esa línea
+
+    // Si hay texto después del último '\n', cuenta esa línea, necesario dado que la última línea puede no termina en '\n'
     if (inicio < secuencia.size()) {
         tam.push_back(secuencia.size() - inicio);
     }
-    if (tam.empty()) return -1;
+
+    // Si no hay líneas, retorna -1 (Osea fallo en justificación)
+    if (tam.empty()) 
+        return -1;
+
+    //Compara todos los tamaños de las líneas 
     size_t tam_ref = tam[0];
     for (size_t i = 1; i + 1 < tam.size(); ++i) {
-        if (tam[i] != tam_ref) return -1;
+        if (tam[i] != tam_ref) 
+            return -1;
     }
-    // La última línea puede ser menor o igual
-    if (tam.back() > tam_ref) return -1;
+
+    // La última línea puede ser menor o igual al resto
+    if (tam.back() > tam_ref) 
+        return -1;
+
+    //Si la secuencia está justificada, retorna la cantidad de caracteres por línea
     return tam_ref;
 }
 

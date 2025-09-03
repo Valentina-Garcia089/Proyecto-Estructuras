@@ -20,11 +20,14 @@ class SecuenciaGenetica {
         vector <Base> getConteo();
         vector<char> getDatos();
         void contarBases();
-        int contarSubsecuencia(const string &s);
+        int esSubsecuencia(const string &s);
+        void setAnchoJustificacion(int ancho);
+        int getAnchoJustificacion() const;
 
     // Datos protegidos
     private:
         string nombre;
+        int anchoJustificacion;
         vector<char> datos;
         vector <Base> conteo;
 };
