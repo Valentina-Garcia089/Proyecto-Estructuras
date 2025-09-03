@@ -66,6 +66,7 @@ bool Sistema::cargaDeArchivo(string archivito){
         }
     }
 
+    cout << conjuntoSecuencias.size() << " secuencias cargadas correctamente de " << archivito << '\n';
     return true;
 }
 
