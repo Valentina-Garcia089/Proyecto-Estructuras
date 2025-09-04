@@ -83,6 +83,11 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
     vector<bool> bases = {false, false, false, false, false}; // A, C, G, T, U
     vector <Base> conteo;
 
+    if (secuencias.empty()) {
+        cout << "No hay secuencias cargadas en memoria.\n";
+        return;
+    }
+
     for (SecuenciaGenetica& sec : secuencias) {
         conteo = sec.getConteo();
         for (char e: sec.getDatos()){
