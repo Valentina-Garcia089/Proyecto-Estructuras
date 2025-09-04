@@ -144,9 +144,9 @@ bool Sistema::verificarSecuencias(string secuencia)
 
 int Sistema::verificaJustificacion(string secuencia)
 {
-    vector<size_t> tam;
-    size_t inicio = 0;
-    size_t pos = 0;
+    vector<int> tam;
+    int inicio = 0;
+    int pos = 0;
 
     // Búsqueda de líneas en la secuencia
     while ((pos = secuencia.find('\n', inicio)) != string::npos) {
@@ -167,8 +167,8 @@ int Sistema::verificaJustificacion(string secuencia)
         return -1;
 
     //Compara todos los tamaños de las líneas 
-    size_t tam_ref = tam[0];
-    for (size_t i = 1; i + 1 < tam.size(); ++i) {
+    int tam_ref = tam[0];
+    for (int i = 1; i + 1 < tam.size(); ++i) {
         if (tam[i] != tam_ref) 
             return -1;
     }
@@ -205,7 +205,7 @@ void Sistema::guardarSecuencias(string nombre_archivo) {
         if (ancho <= 0) ancho = datos.size(); // fallback: toda la secuencia en una sola línea
 
         // Guardar en bloques del ancho detectado
-        for (size_t i = 0; i < datos.size(); i += ancho) {
+        for (int i = 0; i < datos.size(); i += ancho) {
             salida << datos.substr(i, ancho) << "\n";
         }
 
