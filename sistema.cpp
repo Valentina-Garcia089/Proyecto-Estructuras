@@ -95,7 +95,7 @@ void Sistema::histograma(string nombreSecuencia){
 
             cout << "\n";
             for(Base& muestraFrec : recorre.getConteo()){
-                cout << "\n" << muestraFrec.obtenerBase() << ": " << muestraFrec.obtenerFrecuencia() << " repeticiones.\n";
+                cout << "\n" << muestraFrec.obtenerBase() << ": " << muestraFrec.obtenerFrecuencia() << " repeticiones.";
             }
         }
     }

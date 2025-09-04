@@ -29,3 +29,8 @@ void Base::setBase(char base){
 void Base::actualizaFrecuencia(){
     frecuencia++;
 }
+
+vector<char> Base::getRepresenta() const
+{
+    return representa;
+}
