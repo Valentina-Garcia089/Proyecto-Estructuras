@@ -18,6 +18,7 @@ class Base {
         int obtenerFrecuencia();
         void setBase(char base);
         void actualizaFrecuencia();
+        vector<char> getRepresenta() const;
 };
 
 #endif
