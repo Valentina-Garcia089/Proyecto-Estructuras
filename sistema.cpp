@@ -98,8 +98,10 @@ void Sistema::histograma(string nombreSecuencia){
             for(Base& muestraFrec : recorre.getConteo()){
                 cout << "\n" << muestraFrec.obtenerBase() << ": " << muestraFrec.obtenerFrecuencia() << " repeticiones.\n";
             }
+            return;
         }
     }
+    cout << "Secuencia invalida\n";
 }
 
 
