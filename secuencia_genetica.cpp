@@ -77,28 +77,29 @@ int SecuenciaGenetica::esSubsecuencia(const string &s)
     string secuencia(this->datos.begin(), this->datos.end());
     size_t tam = s.size();
     int cont = 0;
-    for (size_t t = 0; t <= secuencia.size() - tam; secuencia.size() + tam){
+    for (size_t t = 0; t <= secuencia.size() - tam; t++){
         if (esIgual(secuencia.substr(t, tam), s)){
             cont++;
         }
     }
 
-    return 0;
+    return cont;
 }
 
 bool SecuenciaGenetica::esIgual(string secuencia, string subsecuencia)
 {
     vector<Base> bases = {};
-    vector<Base>::iterator it = conteo.begin();
+    vector<Base>::iterator it;
     
     for (size_t i = 0; i < secuencia.size(); ++i) {
+        it = conteo.begin();
         for (; it != conteo.end(); it++){
             if (secuencia[i] == it->obtenerBase()){
                 bases.push_back(*it);
             }
         }
     }
-        
+
     for (size_t i = 0; i < subsecuencia.size(); ++i) {
         if (contieneChar(bases[i].getRepresenta(), subsecuencia[i])){
             continue;
