@@ -81,6 +81,7 @@ bool Sistema::cargaDeArchivo(string archivito){
 
 void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
     
+    
 }
 
 
