@@ -144,10 +144,12 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
             
         }
 
+        string nombreDatos(sec.getDatos().data(), sec.getDatos().size());
+
         if (encontrado) {
-            cout << "Secuencia " << sec.getNombre() << " tiene almenos " << count << " bases." << endl;
+            cout << "Secuencia " << sec.getNombre() << '\n' << nombreDatos << "\ntiene almenos " << count << " bases." << endl;
         } else {
-            cout << "Secuencia " << sec.getNombre() << " contiene " << count << " bases." << endl;
+            cout << "Secuencia " << sec.getNombre() << '\n' << nombreDatos << "\ncontiene " << count << " bases." << endl;
         }
 
 
