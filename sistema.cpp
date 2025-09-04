@@ -88,11 +88,26 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
         for (char e: sec.getDatos()){
             for (Base& base : conteo) {
                 if (base.obtenerBase() == e) {
-                    if (sec.contieneChar(base.getRepresenta(), 'A')) bases[0] = true;
-                    if (sec.contieneChar(base.getRepresenta(), 'C')) bases[1] = true;
-                    if (sec.contieneChar(base.getRepresenta(), 'G')) bases[2] = true;
-                    if (sec.contieneChar(base.getRepresenta(), 'T')) bases[3] = true;
-                    if (sec.contieneChar(base.getRepresenta(), 'U')) bases[4] = true;
+                    if (sec.contieneChar(base.getRepresenta(), 'A')) {
+                        bases[0] = true;
+                        break;
+                    }
+                    if (sec.contieneChar(base.getRepresenta(), 'C')) {
+                        bases[1] = true;
+                        break;
+                    }
+                    if (sec.contieneChar(base.getRepresenta(), 'G')) {
+                        bases[2] = true;
+                        break;
+                    }
+                    if (sec.contieneChar(base.getRepresenta(), 'T')) {
+                        bases[3] = true;
+                        break;
+                    }
+                    if (sec.contieneChar(base.getRepresenta(), 'U')) {
+                        bases[4] = true;
+                        break;
+                    }
                 }
             }
         }
@@ -104,26 +119,28 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
                 count++;
             }
         }
-        
+        bool encontrado = false;
         vector<char> tipoBases = {'A', 'C', 'G', 'T', 'U'};
         // Recorre la secuencia y verificar si cada caracter está en tipoBases
         for (char e : sec.getDatos()) {
-            bool encontrado = false;
+            encontrado = false;
             for (int i = 0; i < tipoBases.size(); ++i) {
                 if (e == tipoBases[i]) {
                     encontrado = true;
                     break;
                 }
             }
-            if (!encontrado) {
-                cout << "Secuencia " << sec.getNombre() << " tiene almenos " << count << " bases." << endl;
-                break;
-                continue;
-            }
+            
+        }
+
+        if (encontrado) {
+            cout << "Secuencia " << sec.getNombre() << " tiene almenos " << count << " bases." << endl;
+        } else {
+            cout << "Secuencia " << sec.getNombre() << " contiene " << count << " bases." << endl;
         }
 
 
-        cout << "Secuencia " << sec.getNombre() << " contiene " << count << " bases." << endl;
+        
     }
 
 }
