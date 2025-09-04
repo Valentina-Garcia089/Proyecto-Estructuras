@@ -12,17 +12,17 @@ SecuenciaGenetica::SecuenciaGenetica() {
              Base('G', 0, {'G'}), 
              Base('T', 0, {'T'}), 
              Base('U', 0, {'U'}), 
-             Base('R', 0, {'A', 'G'}), 
-             Base('Y', 0, {'C', 'T', 'U'}), 
-             Base('K', 0, {'G', 'T', 'U'}), 
-             Base('M', 0, {'A', 'C'}), 
-             Base('S', 0, {'C', 'G'}), 
-             Base('W', 0, {'A', 'T', 'U'}), 
-             Base('B', 0, {'C', 'G', 'T', 'U'}), 
-             Base('D', 0, {'A', 'G', 'T', 'U'}), 
-             Base('H', 0, {'A', 'C', 'T', 'U'}), 
-             Base('V', 0, {'A', 'C', 'G'}), 
-             Base('N', 0, {'A', 'C', 'G', 'T', 'U'}), 
+             Base('R', 0, {'R', 'A', 'G'}), 
+             Base('Y', 0, {'Y', 'C', 'T', 'U'}), 
+             Base('K', 0, {'K','G', 'T', 'U'}), 
+             Base('M', 0, {'M', 'A', 'C'}), 
+             Base('S', 0, {'S', 'C', 'G'}), 
+             Base('W', 0, {'W','A', 'T', 'U'}), 
+             Base('B', 0, {'B', 'C', 'G', 'T', 'U'}), 
+             Base('D', 0, {'D','A', 'G', 'T', 'U'}), 
+             Base('H', 0, {'H','A', 'C', 'T', 'U'}), 
+             Base('V', 0, {'V','A', 'C', 'G'}), 
+             Base('N', 0, {'N', 'A', 'C', 'G', 'T', 'U'}), 
              Base('X', 0, {'X'}), 
              Base('-', 0, {'-'})}; 
 }
@@ -74,63 +74,51 @@ void SecuenciaGenetica::contarBases(){
 
 int SecuenciaGenetica::esSubsecuencia(const string &s)
 {
-   /*  int count;
-    vector<std::string> combinaciones = combinacionesString(s); 
-    vector<std::string>::iterator it = combinaciones.begin();
-    vector<int> ocurrencias;
-
-    while (it != combinaciones.end()){
-        count = 0;
-        try
-        {
-            for (size_t t = 0; t <= it->size()-s.size(); t++){
-                if (s == it->substr(t, s.size())){
-                    count++;
-                    t += s.size() - 1; // Evita contar dos veces o de manera repetida
-                }
-            }
+    string secuencia(this->datos.begin(), this->datos.end());
+    size_t tam = s.size();
+    int cont = 0;
+    for (size_t t = 0; t <= secuencia.size() - tam; secuencia.size() + tam){
+        if (esIgual(secuencia.substr(t, tam), s)){
+            cont++;
         }
-        catch(const std::exception& e)
-        {
-            ocurrencias.push_back(count);
-        } 
-        it++;
     }
 
-    for (int n : ocurrencias){
-        if (n > 0) return n;
-    }
- */
     return 0;
 }
 
 bool SecuenciaGenetica::esIgual(string secuencia, string subsecuencia)
 {
-    // La secuencia y la subsecuencia deben tener el mismo tamaño para comparar
-    if (secuencia.size() != subsecuencia.size()) return false;
-
-    // Para cada posición, verifica si el caracter de la subsecuencia está representado por la base de la secuencia
+    vector<Base> bases = {};
+    vector<Base>::iterator it = conteo.begin();
+    
     for (size_t i = 0; i < secuencia.size(); ++i) {
-        char baseSec = secuencia[i];
-        char baseSub = subsecuencia[i];
-        bool match = false;
-
-        // Busca la base en el vector conteo para obtener sus representaciones
-        for (Base& b : conteo) {
-            if (b.obtenerBase() == baseSec) {
-                vector<char> representa = b.getRepresenta();
-                // Búsqueda manual en vez de std::find
-                for (size_t j = 0; j < representa.size(); ++j) {
-                    if (representa[j] == baseSub) {
-                        match = true;
-                        break;
-                    }
-                }
-                break; // Ya encontramos la base, no hace falta seguir buscando en conteo
+        for (; it != conteo.end(); it++){
+            if (secuencia[i] == it->obtenerBase()){
+                bases.push_back(*it);
             }
         }
-        if (!match) return false;
     }
-    // Si todas las posiciones coinciden, retorna true
-    return true;
+        
+    for (size_t i = 0; i < subsecuencia.size(); ++i) {
+        if (contieneChar(bases[i].getRepresenta(), subsecuencia[i])){
+            continue;
+        } else {
+             return 0;   
+        }
+    }
+
+    return 1; 
 }
+
+bool SecuenciaGenetica::contieneChar(std::vector<char> vec, char elemento)
+{
+    vector<char>::iterator it = vec.begin();
+
+    for (; it != vec.end(); it++) {
+        if (*it == elemento) 
+            return true;
+    }
+
+    return false;
+}
+

@@ -24,6 +24,7 @@ class SecuenciaGenetica {
         void setAnchoJustificacion(int ancho);
         int getAnchoJustificacion() const;
         bool esIgual(string secuencia, string subsecuencia);
+        bool contieneChar(std::vector<char> vec, char elemento);
 
     // Datos protegidos
     private:
