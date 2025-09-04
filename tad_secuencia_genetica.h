@@ -23,6 +23,7 @@ class SecuenciaGenetica {
         int esSubsecuencia(const string &s);
         void setAnchoJustificacion(int ancho);
         int getAnchoJustificacion() const;
+        bool esIgual(string secuencia, string subsecuencia);
 
     // Datos protegidos
     private:

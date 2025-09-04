@@ -51,6 +51,7 @@ int main () {
                             cout << "Se enmascaró la subsecuencia" << argumento << "\n";
                         }
                         else if(comando == "guardar" && !argumento.empty()){
+                            sistemita.guardarSecuencias(argumento);
                             cout << "Las secuencias cargadas se guardaron en el archivo " << argumento << "\n";
                         }
                         else if(comando== "ayuda"){

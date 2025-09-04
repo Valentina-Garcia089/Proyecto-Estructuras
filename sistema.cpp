@@ -19,51 +19,57 @@ bool Sistema::cargaDeArchivo(string archivito){
         return false;
     }
     
-    while(getline(archivo, linea)) {// Se leerá linea por linea
-        if((linea[0] == '>') || archivo.peek() == EOF) { // Si al iniciar una linea, se encuentra este caracter en la posición 0:
-            if(!codigo.empty()){
-
-                if (archivo.peek() == EOF) {
-                    codigo += linea; // Añade la última línea leída si es parte del código
-                }
-                
-                // Verifica que la secuencia solo contenga caracteres válidos
+    while(getline(archivo, linea)) { // Se leerá linea por linea
+        if(linea[0] == '>') {
+            // Si hay código pendiente, lo procesamos antes de cambiar de nombre
+            if(!codigo.empty()) {
                 if (verificarSecuencias(codigo) == false) {
                     cout << "El archivo contiene caracteres no validos. Archivo no cargado.\n";
                     conjuntoSecuencias.clear();
                     return false;
                 }
-
-                //Verifica que las lineas código cumplan con la justificación (anchura)
                 anchoJustificacion = verificaJustificacion(codigo);
                 if (anchoJustificacion == -1) {
                     cout << "El archivo contiene secuencias no justificadas. Archivo no cargado.\n";
                     conjuntoSecuencias.clear();
                     return false;
                 }
-
-                // Guardado de caracteres en el vector de chars
                 for (char c : codigo) {
                     if (c != '\n')
                         datos.push_back(c);
                 }
-                
-                // Guardado de la secuencia en el objeto 
                 sec.setDatos(datos);
                 sec.setAnchoJustificacion(anchoJustificacion);
                 conjuntoSecuencias.push_back(sec);
-
-                // Reinicio de variables para la próxima secuencia
                 codigo = "";
                 datos.clear();
             }
-            sec.setNombre(linea.substr(1)); // Guardará el nombre después del caracter
-        }
-        else{
-            codigo += linea + "\n"; // No se hace push_back porque esto espera un char, no un string completo
+            sec.setNombre(linea.substr(1));
+        } else {
+            codigo += linea + "\n";
         }
     }
-
+    // Procesa la última secuencia 
+    if(!codigo.empty()) {
+        if (verificarSecuencias(codigo) == false) {
+            cout << "El archivo contiene caracteres no validos. Archivo no cargado.\n";
+            conjuntoSecuencias.clear();
+            return false;
+        }
+        anchoJustificacion = verificaJustificacion(codigo);
+        if (anchoJustificacion == -1) {
+            cout << "El archivo contiene secuencias no justificadas. Archivo no cargado.\n";
+            conjuntoSecuencias.clear();
+            return false;
+        }
+        for (char c : codigo) {
+            if (c != '\n')
+                datos.push_back(c);
+        }
+        sec.setDatos(datos);
+        sec.setAnchoJustificacion(anchoJustificacion);
+        conjuntoSecuencias.push_back(sec);
+    }
     cout << conjuntoSecuencias.size() << " secuencias cargadas correctamente de " << archivito << '\n';
     return true;
 }
@@ -174,4 +180,40 @@ int Sistema::verificaJustificacion(string secuencia)
 
 vector <SecuenciaGenetica> Sistema:: obtenerConjuntoSec(){
     return conjuntoSecuencias;
+}
+
+void Sistema::guardarSecuencias(string nombre_archivo) {
+
+    ofstream salida(nombre_archivo + ".fa", ios::out | ios::trunc);
+    if (!salida.is_open()) {
+        cout << "Error guardando en " << nombre_archivo << ".\n";
+        return;
+    }
+
+    int contador = 0;
+
+    for (SecuenciaGenetica& sec : conjuntoSecuencias) {
+        salida << ">" << sec.getNombre() << "\n";
+
+        string datos(sec.getDatos().data(), sec.getDatos().size());
+
+        // Detectar ancho de justificación
+        int ancho = verificaJustificacion(datos);
+        if (ancho <= 0) ancho = datos.size(); // fallback: toda la secuencia en una sola línea
+
+        // Guardar en bloques del ancho detectado
+        for (size_t i = 0; i < datos.size(); i += ancho) {
+            salida << datos.substr(i, ancho) << "\n";
+        }
+
+        contador++;
+    }
+
+    salida.close();
+
+    if (contador == 1) {
+        cout << "Se guardó " << contador << " secuencia en " << nombre_archivo << ".\n";
+    } else {
+        cout << "Se guardaron " << contador << " secuencias en " << nombre_archivo << ".\n";
+    }
 }

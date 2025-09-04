@@ -18,8 +18,9 @@ class Sistema {
         void contarSubsecuencias(string subsecuencia);
         bool verificarSecuencias(string secuencia);
         int verificaJustificacion(string secuencia);
-
+        void guardarSecuencias(string nombre_archivo);
         vector <SecuenciaGenetica> obtenerConjuntoSec();
+        
 };
 
 #endif

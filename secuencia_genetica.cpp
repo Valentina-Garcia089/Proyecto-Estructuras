@@ -57,6 +57,8 @@ int SecuenciaGenetica::getAnchoJustificacion() const {
     return anchoJustificacion;
 }
 
+
+
 void SecuenciaGenetica::contarBases(){
     for(Base& recorre : conteo){
         for(char recorre_2 : datos){
@@ -72,26 +74,63 @@ void SecuenciaGenetica::contarBases(){
 
 int SecuenciaGenetica::esSubsecuencia(const string &s)
 {
-    int count = 0;
-    //Creación de un string a partir de un vector
-    string hola(datos.begin(), datos.end());
-    while (hola.find('\n') != string::npos)
-        hola.erase(hola.find('\n'), 1);
+   /*  int count;
+    vector<std::string> combinaciones = combinacionesString(s); 
+    vector<std::string>::iterator it = combinaciones.begin();
+    vector<int> ocurrencias;
 
-    try
-    {
-        for (size_t t = 0; t <= hola.size()-s.size(); t++){
-            if (s == hola.substr(t, s.size())){
-                count++;
-                t += s.size() - 1; // Evita contar dos veces o de manera repetida
+    while (it != combinaciones.end()){
+        count = 0;
+        try
+        {
+            for (size_t t = 0; t <= it->size()-s.size(); t++){
+                if (s == it->substr(t, s.size())){
+                    count++;
+                    t += s.size() - 1; // Evita contar dos veces o de manera repetida
+                }
             }
         }
+        catch(const std::exception& e)
+        {
+            ocurrencias.push_back(count);
+        } 
+        it++;
     }
-    catch(const std::exception& e)
-    {
-        return count;
-    } 
 
-    return count;
-    
+    for (int n : ocurrencias){
+        if (n > 0) return n;
+    }
+ */
+    return 0;
+}
+
+bool SecuenciaGenetica::esIgual(string secuencia, string subsecuencia)
+{
+    // La secuencia y la subsecuencia deben tener el mismo tamaño para comparar
+    if (secuencia.size() != subsecuencia.size()) return false;
+
+    // Para cada posición, verifica si el caracter de la subsecuencia está representado por la base de la secuencia
+    for (size_t i = 0; i < secuencia.size(); ++i) {
+        char baseSec = secuencia[i];
+        char baseSub = subsecuencia[i];
+        bool match = false;
+
+        // Busca la base en el vector conteo para obtener sus representaciones
+        for (Base& b : conteo) {
+            if (b.obtenerBase() == baseSec) {
+                vector<char> representa = b.getRepresenta();
+                // Búsqueda manual en vez de std::find
+                for (size_t j = 0; j < representa.size(); ++j) {
+                    if (representa[j] == baseSub) {
+                        match = true;
+                        break;
+                    }
+                }
+                break; // Ya encontramos la base, no hace falta seguir buscando en conteo
+            }
+        }
+        if (!match) return false;
+    }
+    // Si todas las posiciones coinciden, retorna true
+    return true;
 }

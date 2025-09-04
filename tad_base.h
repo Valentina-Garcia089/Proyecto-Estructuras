@@ -13,7 +13,7 @@ class Base {
         vector<char> representa;
     
     public:
-        Base(char base, int frecuencia, vector<char> representa); // Nuevo constructor
+        Base(char base, int frecuencia, vector<char> representa);
         char obtenerBase();
         int obtenerFrecuencia();
         void setBase(char base);
