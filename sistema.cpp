@@ -80,36 +80,52 @@ bool Sistema::cargaDeArchivo(string archivito){
 
 
 void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
-    SecuenciaGenetica obj;
-    vector <SecuenciaGenetica>::iterator it;
-    it = secuencias.begin();
-    vector <char>::iterator it_char;
-    string dato = "";
-    vector <char> vec;
- 
-    //Iteración del vector con iteradores
-    for (; it != secuencias.end(); it++){
-        cout << it->getNombre() << "\n";
- 
-        it->contarBases(); // Hacemos que cuente todas las bases de cada secuencia
-        for(Base& base : it->getConteo()){
-            if(base.obtenerFrecuencia() >= 1){
-                if(base.getRepresenta().size() == 1){
-                    vec.push_back(base.obtenerBase()); // Si hace parte de los codigos exactos, los agrega de una vez al vector.
-                }
-                else{
-                    for(char posiblesBases : base.getRepresenta()){
-                        if(!obj.contieneChar(vec, posiblesBases)){
-                            vec.push_back(posiblesBases);
-                        }
-                    }
+    vector<bool> bases = {false, false, false, false, false}; // A, C, G, T, U
+    vector <Base> conteo;
+
+    for (SecuenciaGenetica& sec : secuencias) {
+        conteo = sec.getConteo();
+        for (char e: sec.getDatos()){
+            for (Base& base : conteo) {
+                if (base.obtenerBase() == e) {
+                    if (sec.contieneChar(base.getRepresenta(), 'A')) bases[0] = true;
+                    if (sec.contieneChar(base.getRepresenta(), 'C')) bases[1] = true;
+                    if (sec.contieneChar(base.getRepresenta(), 'G')) bases[2] = true;
+                    if (sec.contieneChar(base.getRepresenta(), 'T')) bases[3] = true;
+                    if (sec.contieneChar(base.getRepresenta(), 'U')) bases[4] = true;
                 }
             }
         }
-        string datos(it->getDatos().data(), it->getDatos().size());
-        cout << datos << "\n";
-        cout << "La secuencia tiene " << vec.size() << "bases\n";
+
+        int count = 0;
+
+        for (bool b : bases) {
+            if (b == true) {
+                count++;
+            }
+        }
+        
+        vector<char> tipoBases = {'A', 'C', 'G', 'T', 'U'};
+        // Recorre la secuencia y verificar si cada caracter está en tipoBases
+        for (char e : sec.getDatos()) {
+            bool encontrado = false;
+            for (int i = 0; i < tipoBases.size(); ++i) {
+                if (e == tipoBases[i]) {
+                    encontrado = true;
+                    break;
+                }
+            }
+            if (!encontrado) {
+                cout << "Secuencia " << sec.getNombre() << " tiene almenos " << count << " bases." << endl;
+                break;
+                continue;
+            }
+        }
+
+
+        cout << "Secuencia " << sec.getNombre() << " contiene " << count << " bases." << endl;
     }
+
 }
 
 
