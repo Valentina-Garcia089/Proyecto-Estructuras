@@ -77,6 +77,8 @@ bool Sistema::cargaDeArchivo(string archivito){
 
 
 
+
+
 void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
     vector <SecuenciaGenetica>::iterator it;
     it = secuencias.begin();
@@ -92,6 +94,8 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
         
     }
 }
+
+
 
 
 void Sistema::histograma(string nombreSecuencia){
@@ -112,6 +116,8 @@ void Sistema::histograma(string nombreSecuencia){
 
 
 
+
+
 void Sistema::contarSubsecuencias(string subsecuencia)
 {
     vector<SecuenciaGenetica>::iterator it = conjuntoSecuencias.begin();
@@ -124,23 +130,31 @@ void Sistema::contarSubsecuencias(string subsecuencia)
     printf("Total de ocurrencias de las secuencias es :%d\n", total);
 }
 
+
+
+
 bool Sistema::verificarSecuencias(string secuencia)
 {
     //Podría ser un string
     vector<char> bases_validas = {'A', 'C', 'G', 'T', 'U', 'R', 'Y', 'K', 'M', 'S', 'W', 
-                                  'B', 'D', 'H', 'V', 'N', 'X', '-', '\n'};
+                                  'B', 'D', 'H', 'V', 'N', 'X', '-', '\n', '\r'};
 
     string caracteresValidos(bases_validas.begin(), bases_validas.end());
 
     //Verifica que cada carácter en la secuencia sea un carácter válido
     for (char c : secuencia) {
         if (caracteresValidos.find(c) == string::npos){
+            cout << "Caracter invalido: " << c << "\n";
             return false; // Carácter no válido encontrado
         }
     }
 
     return true; // Todos los caracteres son válidos
 }
+
+
+
+
 
 int Sistema::verificaJustificacion(string secuencia)
 {
@@ -181,9 +195,16 @@ int Sistema::verificaJustificacion(string secuencia)
     return tam_ref;
 }
 
+
+
+
+
 vector <SecuenciaGenetica> Sistema:: obtenerConjuntoSec(){
     return conjuntoSecuencias;
 }
+
+
+
 
 void Sistema::guardarSecuencias(string nombre_archivo) {
 
