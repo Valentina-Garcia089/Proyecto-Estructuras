@@ -71,6 +71,12 @@ bool Sistema::cargaDeArchivo(string archivito){
         sec.setAnchoJustificacion(anchoJustificacion);
         conjuntoSecuencias.push_back(sec);
     }
+
+    if (conjuntoSecuencias.empty()) {
+        cout << archivito << " no contiene ninguna secuencia.\n";
+        return false;
+    }
+
     cout << conjuntoSecuencias.size() << " secuencias cargadas correctamente de " << archivito << '\n';
     return true;
 }
