@@ -48,6 +48,7 @@ int main () {
                             cout << "La subsecuencia " << argumento << " se repite n veces\n";
                         }
                         else if(comando == "enmascarar" && !argumento.empty()){
+                            sistemita.enmascararSecuencia(argumento);
                             cout << "Se enmascaró la subsecuencia" << argumento << "\n";
                         }
                         else if(comando == "guardar" && !argumento.empty()){

@@ -196,7 +196,27 @@ int Sistema::verificaJustificacion(string secuencia)
 }
 
 
+void Sistema::enmascararSecuencia(string subsecuencia) {
+    for (SecuenciaGenetica& sec : conjuntoSecuencias) {
+        vector<char> datos = sec.getDatos();
+        int tam = subsecuencia.size();
+        int cont = 0;
 
+        for (int t = 0; t <= datos.size() - tam; t++) {
+            if (sec.esIgual(string(datos.begin() + t, datos.begin() + t + tam), subsecuencia)) {
+                cont++;
+                for (int j = 0; j < tam; j++) {
+                    datos[t + j] = 'X';
+                }
+            }
+        }
+
+        if (cont > 0) {
+            sec.setDatos(datos);
+            cout << "Se enmascaron " << cont << " ocurrencias en la secuencia " << sec.getNombre() << ".\n";
+        }   
+    }
+}
 
 
 vector <SecuenciaGenetica> Sistema:: obtenerConjuntoSec(){
@@ -221,18 +241,20 @@ void Sistema::guardarSecuencias(string nombre_archivo) {
 
         string datos(sec.getDatos().data(), sec.getDatos().size());
 
-        // Detectar ancho de justificación
-        int ancho = verificaJustificacion(datos);
-        if (ancho <= 0) ancho = datos.size(); // fallback: toda la secuencia en una sola línea
-
-        // Guardar en bloques del ancho detectado
-        for (int i = 0; i < datos.size(); i += ancho) {
-            salida << datos.substr(i, ancho) << "\n";
+        int temp = 0;
+        for (char c : datos) {
+            salida << c;
+            if (temp == sec.getAnchoJustificacion()) {
+                salida << "\n";
+                temp = 0;
+                continue;
+            }
+            temp++;
         }
-
+        salida << "\n";
         contador++;
     }
-
+    
     salida.close();
 
     if (contador == 1) {
