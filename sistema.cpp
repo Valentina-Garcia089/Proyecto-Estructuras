@@ -80,19 +80,7 @@ bool Sistema::cargaDeArchivo(string archivito){
 
 
 void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
-    vector <SecuenciaGenetica>::iterator it;
-    it = secuencias.begin();
-    vector <char>::iterator it_char;
-    string dato = "";
-
-    //Iteración del vector con iteradores
-    for (; it != secuencias.end(); it++){
-        cout << it->getNombre() << "\n";
-        
-        string datos(it->getDatos().data(), it->getDatos().size());
-        cout << datos << "\n";
-        
-    }
+    
 }
 
 
@@ -197,6 +185,7 @@ int Sistema::verificaJustificacion(string secuencia)
 
 
 void Sistema::enmascararSecuencia(string subsecuencia) {
+    int total = 0;
     for (SecuenciaGenetica& sec : conjuntoSecuencias) {
         vector<char> datos = sec.getDatos();
         int tam = subsecuencia.size();
@@ -213,9 +202,13 @@ void Sistema::enmascararSecuencia(string subsecuencia) {
 
         if (cont > 0) {
             sec.setDatos(datos);
-            cout << "Se enmascaron " << cont << " ocurrencias en la secuencia " << sec.getNombre() << ".\n";
-        }   
+        }
     }
+    if (total > 0) {
+            cout << total << " subsecuencias han sido enmascaradas dentro de las secuencias cargadas en memoria.";
+        } else {
+            cout << "La subsecuencia dada no existe dentro de las secuencias cargadas en memoria, por tanto no se enmascara nada.";
+        }
 }
 
 
