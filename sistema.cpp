@@ -80,9 +80,38 @@ bool Sistema::cargaDeArchivo(string archivito){
 
 
 void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
-    
-    
+    SecuenciaGenetica obj;
+    vector <SecuenciaGenetica>::iterator it;
+    it = secuencias.begin();
+    vector <char>::iterator it_char;
+    string dato = "";
+    vector <char> vec;
+ 
+    //Iteración del vector con iteradores
+    for (; it != secuencias.end(); it++){
+        cout << it->getNombre() << "\n";
+ 
+        it->contarBases(); // Hacemos que cuente todas las bases de cada secuencia
+        for(Base& base : it->getConteo()){
+            if(base.obtenerFrecuencia() >= 1){
+                if(base.getRepresenta().size() == 1){
+                    vec.push_back(base.obtenerBase()); // Si hace parte de los codigos exactos, los agrega de una vez al vector.
+                }
+                else{
+                    for(char posiblesBases : base.getRepresenta()){
+                        if(!obj.contieneChar(vec, posiblesBases)){
+                            vec.push_back(posiblesBases);
+                        }
+                    }
+                }
+            }
+        }
+        string datos(it->getDatos().data(), it->getDatos().size());
+        cout << datos << "\n";
+        cout << "La secuencia tiene " << vec.size() << "bases\n";
+    }
 }
+
 
 
 
@@ -207,9 +236,9 @@ void Sistema::enmascararSecuencia(string subsecuencia) {
     }
     if (total > 0) {
             cout << total << " subsecuencias han sido enmascaradas dentro de las secuencias cargadas en memoria.";
-        } else {
+    } else {
             cout << "La subsecuencia dada no existe dentro de las secuencias cargadas en memoria, por tanto no se enmascara nada.";
-        }
+    }
 }
 
 
