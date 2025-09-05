@@ -45,7 +45,7 @@ bool Sistema::cargaDeArchivo(string archivito){
                 codigo = "";
                 datos.clear();
             }
-            sec.setNombre(linea.substr(1));
+            sec.setNombre(linea.substr(1)); // (Devuelve una subcadena de linea desde la posición 1)
         } else {
             codigo += linea + "\n";
         }
@@ -98,6 +98,7 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
         conteo = sec.getConteo();
         for (char e: sec.getDatos()){
             for (Base& base : conteo) {
+                // Si la base preestablecida es igual a la base leida de la secuencia genetica, entonces:
                 if (base.obtenerBase() == e) {
                     if (sec.contieneChar(base.getRepresenta(), 'A')) {
                         bases[0] = true;
@@ -130,6 +131,8 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
                 count++;
             }
         }
+
+        // ESTO NO LO SIENTO NECESARIO:
         bool encontrado = false;
         vector<char> tipoBases = {'A', 'C', 'G', 'T', 'U'};
         // Recorre la secuencia y verificar si cada caracter está en tipoBases
@@ -144,6 +147,8 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
             
         }
 
+        // data(): devuelve un puntero a la primera posición del vector
+        // Copia .size() elementos desde la primera posición del vector
         string nombreDatos(sec.getDatos().data(), sec.getDatos().size());
 
         if (encontrado) {
@@ -151,11 +156,7 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
         } else {
             cout << "Secuencia " << sec.getNombre() << '\n' << nombreDatos << "\ncontiene " << count << " bases." << endl;
         }
-
-
-        
     }
-
 }
 
 
@@ -203,6 +204,7 @@ bool Sistema::verificarSecuencias(string secuencia)
     vector<char> bases_validas = {'A', 'C', 'G', 'T', 'U', 'R', 'Y', 'K', 'M', 'S', 'W', 
                                   'B', 'D', 'H', 'V', 'N', 'X', '-', '\n', '\r'};
 
+    // Declaración de variable tipo string que hace que tenga cada char de "bases_validas"
     string caracteresValidos(bases_validas.begin(), bases_validas.end());
 
     //Verifica que cada carácter en la secuencia sea un carácter válido
@@ -226,32 +228,36 @@ int Sistema::verificaJustificacion(string secuencia)
     int inicio = 0;
     int pos = 0;
 
-    // Búsqueda de líneas en la secuencia
+    // Búsqueda de líneas en la secuencia empezando desde la posición (inicio)
     while ((pos = secuencia.find('\n', inicio)) != string::npos) {
         //Va añadiendo los tamaños de las líneas encontradas
+        // pos es la posición donde encontró '\n' e "inicio" es donde empieza la linea
         tam.push_back(pos - inicio);
 
-        //Cambia el inicio para la siguiente busqueda
+        //Cambia el inicio para la siguiente busqueda despues del '\n' ("siguiente linea")
         inicio = pos + 1;
     }
 
     // Si hay texto después del último '\n', cuenta esa línea, necesario dado que la última línea puede no termina en '\n'
+
+    // Si inicio todavía es menor al tamaño total significa que queda texto sin procesar
     if (inicio < secuencia.size()) {
         tam.push_back(secuencia.size() - inicio);
     }
 
-    // Si no hay líneas, retorna -1 (Osea fallo en justificación)
+    // Si no hay líneas, retorna -1 (O sea fallo en justificación)
     if (tam.empty()) 
         return -1;
 
     //Compara todos los tamaños de las líneas 
     int tam_ref = tam[0];
+    // Llega hasta la penultima niña porque la linea final si podría tener un tamaño diferente
     for (int i = 1; i + 1 < tam.size(); ++i) {
         if (tam[i] != tam_ref) 
             return -1;
     }
 
-    // La última línea puede ser menor o igual al resto
+    // La última línea puede ser menor o igual al resto, PERO NO MAYOR
     if (tam.back() > tam_ref) 
         return -1;
 
