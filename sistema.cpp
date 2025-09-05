@@ -95,6 +95,7 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
     }
 
     for (SecuenciaGenetica& sec : secuencias) {
+        bases = {false, false, false, false, false}; // nueva linea para arreglar contar bases.
         conteo = sec.getConteo();
         for (char e: sec.getDatos()){
             for (Base& base : conteo) {
@@ -134,10 +135,10 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
 
         // ESTO NO LO SIENTO NECESARIO:
         bool encontrado = false;
-        vector<char> tipoBases = {'A', 'C', 'G', 'T', 'U'};
+        vector<char> tipoBases = {'A', 'C', 'G', 'T', 'U'}; // TODO
         // Recorre la secuencia y verificar si cada caracter está en tipoBases
         for (char e : sec.getDatos()) {
-            encontrado = false;
+            //encontrado = false;
             for (int i = 0; i < tipoBases.size(); ++i) {
                 if (e == tipoBases[i]) {
                     encontrado = true;
@@ -202,7 +203,7 @@ bool Sistema::verificarSecuencias(string secuencia)
 {
     //Podría ser un string
     vector<char> bases_validas = {'A', 'C', 'G', 'T', 'U', 'R', 'Y', 'K', 'M', 'S', 'W', 
-                                  'B', 'D', 'H', 'V', 'N', 'X', '-', '\n', '\r'};
+                                  'B', 'D', 'H', 'V', 'N', 'X', '-', '\n', '\r'}; //TODO
 
     // Declaración de variable tipo string que hace que tenga cada char de "bases_validas"
     string caracteresValidos(bases_validas.begin(), bases_validas.end());

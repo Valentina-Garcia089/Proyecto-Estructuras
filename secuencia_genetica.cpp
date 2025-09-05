@@ -111,7 +111,7 @@ bool SecuenciaGenetica::esIgual(string secuencia, string subsecuencia)
     return 1; 
 }
 
-bool SecuenciaGenetica::contieneChar(std::vector<char> vec, char elemento)
+bool SecuenciaGenetica::contieneChar(vector<char> vec, char elemento)
 {
     vector<char>::iterator it = vec.begin();
 
