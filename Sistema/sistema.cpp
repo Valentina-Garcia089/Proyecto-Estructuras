@@ -1,5 +1,5 @@
 #include "tad_sistema.h"
-#include "tad_secuencia_genetica.h"
+#include "../SecuenciaGenetica/tad_secuencia_genetica.h"
 #include <iostream>
 #include <fstream>
 #include <vector>

@@ -2,8 +2,8 @@
 #include <sstream>
 #include <string>
 
-#include "menu_commands.h"
-#include "tad_sistema.h"
+#include "menu/menu_commands.h"
+#include "Sistema/tad_sistema.h"
 
 
 using namespace std;

@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <vector>
-#include "tad_secuencia_genetica.h"
+#include "../SecuenciaGenetica/tad_secuencia_genetica.h"
 
 using namespace std;
 
@@ -23,5 +23,7 @@ class Sistema {
         vector <SecuenciaGenetica> obtenerConjuntoSec();
         
 };
+
+#include "sistema.cpp"
 
 #endif
