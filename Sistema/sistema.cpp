@@ -297,6 +297,7 @@ void Sistema::enmascararSecuencia(string subsecuencia) {
         if (cont > 0) {
             sec.setDatos(datos);
         }
+        total += cont;
     }
     if (total > 0) {
             cout << total << " subsecuencias han sido enmascaradas dentro de las secuencias cargadas en memoria.";
@@ -331,7 +332,7 @@ void Sistema::guardarSecuencias(string nombre_archivo) {
         int temp = 0;
         for (char c : datos) {
             salida << c;
-            if (temp == sec.getAnchoJustificacion()) {
+            if (temp == sec.getAnchoJustificacion() - 1) {
                 salida << "\n";
                 temp = 0;
                 continue;
