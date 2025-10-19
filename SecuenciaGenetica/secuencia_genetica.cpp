@@ -75,9 +75,9 @@ void SecuenciaGenetica::contarBases(){
 int SecuenciaGenetica::esSubsecuencia(const string &s)
 {
     string secuencia(this->datos.begin(), this->datos.end());
-    size_t tam = s.size();
+    int tam = s.size();
     int cont = 0;
-    for (size_t t = 0; t <= secuencia.size() - tam; t++){
+    for (int t = 0; t <= secuencia.size() - tam; t++){
         if (esIgual(secuencia.substr(t, tam), s)){
             cont++;
         }
@@ -100,11 +100,16 @@ bool SecuenciaGenetica::esIgual(string secuencia, string subsecuencia)
         }
     }
 
+    // Verificar tamaños
+    if (bases.size() < subsecuencia.size()) {
+        return 0;
+    }
+
     for (int i = 0; i < subsecuencia.size(); ++i) {
         if (contieneChar(bases[i].getRepresenta(), subsecuencia[i])){
             continue;
         } else {
-             return 0;   
+            return 0;   
         }
     }
 
