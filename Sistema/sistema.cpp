@@ -145,9 +145,9 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
             }
         }
 
-        // ESTO NO LO SIENTO NECESARIO:
         bool encontrado = false;
-        vector<char> tipoBases = {'A', 'C', 'G', 'T', 'U'}; // TODO
+        vector<char> tipoBases = {'A', 'C', 'G', 'T', 'U'};
+
         // Recorre la secuencia y verificar si cada caracter está en tipoBases
         for (char e : sec.getDatos()) {
             encontrado = false;

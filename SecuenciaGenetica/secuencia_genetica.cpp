@@ -91,7 +91,7 @@ bool SecuenciaGenetica::esIgual(string secuencia, string subsecuencia)
     vector<Base> bases = {};
     vector<Base>::iterator it;
     
-    for (size_t i = 0; i < secuencia.size(); ++i) {
+    for (int i = 0; i < secuencia.size(); ++i) {
         it = conteo.begin();
         for (; it != conteo.end(); it++){
             if (secuencia[i] == it->obtenerBase()){
@@ -100,7 +100,7 @@ bool SecuenciaGenetica::esIgual(string secuencia, string subsecuencia)
         }
     }
 
-    for (size_t i = 0; i < subsecuencia.size(); ++i) {
+    for (int i = 0; i < subsecuencia.size(); ++i) {
         if (contieneChar(bases[i].getRepresenta(), subsecuencia[i])){
             continue;
         } else {
