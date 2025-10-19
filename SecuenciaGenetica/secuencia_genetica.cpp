@@ -77,6 +77,11 @@ int SecuenciaGenetica::esSubsecuencia(const string &s)
     string secuencia(this->datos.begin(), this->datos.end());
     int tam = s.size();
     int cont = 0;
+
+    if (tam > secuencia.size()) {
+        return 0;
+    }
+
     for (int t = 0; t <= secuencia.size() - tam; t++){
         if (esIgual(secuencia.substr(t, tam), s)){
             cont++;
