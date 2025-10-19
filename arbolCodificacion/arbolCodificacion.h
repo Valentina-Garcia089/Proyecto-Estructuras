@@ -1,7 +1,7 @@
 #ifndef __ARBOL_CODIFICACION__H__
 #define __ARBOL_CODIFICACION__H__
 
-#include "nodoCodificacion.h"
+#include "NodoCodificacion.h"
 #include "../SecuenciaGenetica/tad_base.h"
 
 #include <iostream>
@@ -9,12 +9,11 @@
 
 using namespace std;
 
-class arbolCodificacion {
+class ArbolCodificacion {
     private:
-        nodoCodificacion* raiz;
+        NodoCodificacion* raiz;
     public:
-        arbolCodificacion(vector<Base> cantidades);
-        
+        ArbolCodificacion(vector<Base> cantidades);
 };
 
 #endif

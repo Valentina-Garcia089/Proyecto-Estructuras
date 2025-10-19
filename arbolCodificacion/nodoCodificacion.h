@@ -6,20 +6,22 @@
 
 using namespace std;
 
-class nodoCodificacion {
+class NodoCodificacion {
     private:
         char base;
         int frecuencia;
-        nodoCodificacion* izquierda = nullptr;
-        nodoCodificacion* derecha = nullptr;
+        NodoCodificacion* hijoIzq = nullptr;
+        NodoCodificacion* hijoDer = nullptr;
     public:
-        nodoCodificacion(char base, int frecuencia);
+        NodoCodificacion(char base, int frecuencia);
+        ~NodoCodificacion();
         char getBase();
         int getFrecuencia();
-        nodoCodificacion* getIzquierda();
-        nodoCodificacion* getDerecha();
-        void setIzquierda(nodoCodificacion* izquierda);
-        void setDerecha(nodoCodificacion* derecha);
+        NodoCodificacion* getHijoIzq();
+        NodoCodificacion* getHijoDer();
+        void setHijoIzq(NodoCodificacion* izquierda);
+        void setHijoDer(NodoCodificacion* derecha);
+        bool esHoja();
 };
 
 #endif
