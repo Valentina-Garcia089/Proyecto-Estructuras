@@ -15,11 +15,11 @@ NodoCodificacion::~NodoCodificacion(){
     delete this->hijoIzq;
 }
 
-char NodoCodificacion::getBase(){
+char NodoCodificacion::getBase() const{
     return this->base;
 }
 
-int NodoCodificacion::getFrecuencia(){
+int NodoCodificacion::getFrecuencia() const{
     return this->frecuencia;
 }
 
@@ -47,4 +47,8 @@ bool NodoCodificacion::esHoja(){
     }
 
     return false;
+}
+
+bool NodoCodificacion::operator<(const NodoCodificacion& other) const {
+    return this->frecuencia < other.getFrecuencia();
 }

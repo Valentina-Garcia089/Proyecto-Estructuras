@@ -15,13 +15,16 @@ class NodoCodificacion {
     public:
         NodoCodificacion(char base, int frecuencia);
         ~NodoCodificacion();
-        char getBase();
-        int getFrecuencia();
+        char getBase() const;
+        int getFrecuencia() const;
         NodoCodificacion* getHijoIzq();
         NodoCodificacion* getHijoDer();
         void setHijoIzq(NodoCodificacion* izquierda);
         void setHijoDer(NodoCodificacion* derecha);
         bool esHoja();
+        bool operator<(const NodoCodificacion& other) const;
 };
+
+#include "nodoCodificacion.hxx"
 
 #endif

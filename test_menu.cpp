@@ -54,6 +54,11 @@ int main () {
                         else if(comando == "guardar" && !argumento.empty()){
                             sistemita.guardarSecuencias(argumento);
                             cout << "Las secuencias cargadas se guardaron en el archivo " << argumento << "\n";
+                        } 
+                        //TODO: Cambiar a codificar/comprimir
+                        //TODO: Agregar a el menu de ayuda
+                        else if (comando == "arbol_codificacion" && !argumento.empty()){
+                            sistemita.arbolCodificacion(argumento);
                         }
                         else if(comando== "ayuda"){
                             comandoAyuda(argumento, 2);

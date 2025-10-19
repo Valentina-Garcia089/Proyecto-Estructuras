@@ -1,5 +1,6 @@
 #include "tad_sistema.h"
 #include "../SecuenciaGenetica/tad_secuencia_genetica.h"
+#include "../arbolCodificacion/arbolCodificacion.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -306,13 +307,24 @@ void Sistema::enmascararSecuencia(string subsecuencia) {
     }
 }
 
+//TODO: Cambiar a codificar/comprimir
+void Sistema::arbolCodificacion(string nombreSecuencia){
+    for(SecuenciaGenetica& recorre : conjuntoSecuencias){
+        if(recorre.getNombre() == nombreSecuencia || recorre.getNombre() == nombreSecuencia + "\r"){
+            recorre.contarBases();
+            ArbolCodificacion arbol(recorre.getConteo());
+            cout << "Árbol de codificación para la secuencia " << recorre.getNombre() << ":\n";
+            arbol.imprimirArbol();
+            return;
+        }
+    }
+    cout << "Secuencia invalida\n";
+}
+
 
 vector <SecuenciaGenetica> Sistema:: obtenerConjuntoSec(){
     return conjuntoSecuencias;
 }
-
-
-
 
 void Sistema::guardarSecuencias(string nombre_archivo) {
 

@@ -14,6 +14,10 @@ class ArbolCodificacion {
         NodoCodificacion* raiz;
     public:
         ArbolCodificacion(vector<Base> cantidades);
+        NodoCodificacion* getRaiz();
+        void imprimirArbol();
 };
+
+#include "arbolCodificacion.hxx"
 
 #endif
