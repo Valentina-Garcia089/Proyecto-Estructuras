@@ -45,6 +45,18 @@ bool Sistema::cargaDeArchivo(string archivito){
                 codigo = "";
                 datos.clear();
             }
+            if (linea.substr(1).empty()) {
+                cout << "Nombre de secuencia invalido. Archivo no cargado.\n";
+                conjuntoSecuencias.clear();
+                return false;
+            }
+            for (vector<SecuenciaGenetica>::iterator s = conjuntoSecuencias.begin(); s != conjuntoSecuencias.end(); ++s) {
+                if (s->getNombre().compare(linea.substr(1).c_str()) == 0) {
+                    cout << "Nombres de secuencias duplicados. Archivo no cargado.\n";
+                    conjuntoSecuencias.clear();
+                    return false;
+                }
+            }
             sec.setNombre(linea.substr(1)); // (Devuelve una subcadena de linea desde la posición 1)
         } else {
             codigo += linea + "\n";
@@ -138,14 +150,13 @@ void Sistema::listarSecuencias(vector<SecuenciaGenetica> secuencias){
         vector<char> tipoBases = {'A', 'C', 'G', 'T', 'U'}; // TODO
         // Recorre la secuencia y verificar si cada caracter está en tipoBases
         for (char e : sec.getDatos()) {
-            //encontrado = false;
+            encontrado = false;
             for (int i = 0; i < tipoBases.size(); ++i) {
                 if (e == tipoBases[i]) {
                     encontrado = true;
                     break;
                 }
             }
-            
         }
 
         // data(): devuelve un puntero a la primera posición del vector
