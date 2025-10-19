@@ -14,6 +14,7 @@ class arbolCodificacion {
         nodoCodificacion* raiz;
     public:
         arbolCodificacion(vector<Base> cantidades);
+        
 };
 
 #endif
