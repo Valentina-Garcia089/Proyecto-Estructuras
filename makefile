@@ -1,5 +1,5 @@
 # Comando para windows:
-# g++ -Wall -g -std=c++17 -I test_menu.cpp menu/menu_commands.cpp SecuenciaGenetica/base.cpp SecuenciaGenetica/secuencia_genetica.cpp -o programa
+# g++ -Wall -g -std=c++17 test_menu.cpp menu/menu_commands.cpp SecuenciaGenetica/base.cpp SecuenciaGenetica/secuencia_genetica.cpp -o programa
 CC = g++
 CXXFLAGS = -Wall -g -std=c++17
 CPPFLAGS = -I.
