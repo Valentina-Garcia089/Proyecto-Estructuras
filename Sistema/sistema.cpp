@@ -218,7 +218,7 @@ bool Sistema::verificarSecuencias(string secuencia)
 {
     //Podría ser un string
     vector<char> bases_validas = {'A', 'C', 'G', 'T', 'U', 'R', 'Y', 'K', 'M', 'S', 'W', 
-                                  'B', 'D', 'H', 'V', 'N', 'X', '-', '\n', '\r'}; //TODO
+                                  'B', 'D', 'H', 'V', 'N', 'X', '-', '\n', '\r'};
 
     // Declaración de variable tipo string que hace que tenga cada char de "bases_validas"
     string caracteresValidos(bases_validas.begin(), bases_validas.end());
@@ -310,29 +310,56 @@ void Sistema::enmascararSecuencia(string subsecuencia) {
     }
 }
 
+//TODO: Cambiar a codificar/comprimir
 void Sistema::codificarSecuencias(string nombreArchivo)
-{
-    
-    
-    ofstream salida(nombreArchivo + ".fabin", ios::out | ios::trunc);
-    if (!salida.is_open()) {
-        cout << "Error guardando en " << nombreArchivo << ".\n";
-        return;
+{   
+    // if (nombreArchivo.find(".fabin") != string::npos) {
+    //     nombreArchivo+= ".fabin";
+    // }
+    // ofstream salida(nombreArchivo, ios::out | ios::trunc);
+    // if (!salida.is_open()) {
+    //     cout << "Error guardando en " << nombreArchivo << ".\n";
+    //     return;
+    // }
+
+    vector<vector<Base>> todosLosConteos;
+    for (SecuenciaGenetica& sec : conjuntoSecuencias) {
+        todosLosConteos.push_back(sec.getConteo());
     }
 
+    vector<Base> nuevoConteo;
+
+    for (vector<Base>& conteo : todosLosConteos) {
+        for (Base& base : conteo) {
+            bool encontrado = false;
+            for (Base& nuevoBase : nuevoConteo) {
+                if (nuevoBase.obtenerBase() == base.obtenerBase()) {
+                    nuevoBase = nuevoBase + base;
+                    encontrado = true;
+                    break;
+                }
+            }
+            if (!encontrado) {
+                nuevoConteo.push_back(base);
+            }
+        }
+    }
+    
+    ArbolCodificacion arbol(nuevoConteo);
+    arbol.imprimirArbol();
 
 }
 
-//TODO: Cambiar a codificar/comprimir
 void Sistema::arbolCodificacion(string nombreSecuencia){
     for(SecuenciaGenetica& recorre : conjuntoSecuencias){
         if(recorre.getNombre() == nombreSecuencia || recorre.getNombre() == nombreSecuencia + "\r"){
-            for (Base& base : recorre.getConteo()) {
+            for (Base& base : recorre.getConteo() ) {
                 cout << base.obtenerBase() << ": " << base.obtenerFrecuencia() << " repeticiones.\n";
             }
             ArbolCodificacion arbol(recorre.getConteo());
             cout << "Árbol de codificación para la secuencia " << recorre.getNombre() << ":\n";
             arbol.imprimirArbol();
+            cout << arbol.obtenerBaseDeDato({0,0,0,0,0,0,0,0});
             return;
         }
     }

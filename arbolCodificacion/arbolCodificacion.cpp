@@ -13,6 +13,7 @@ struct Comparador {
 using namespace std;
 
 ArbolCodificacion::ArbolCodificacion(vector<Base> cantidades){
+    priority_queue<NodoCodificacion*, vector<NodoCodificacion*>, Comparador> cola;
     priority_queue<NodoCodificacion*, vector<NodoCodificacion*>, Comparador> minHeap;
 
     for (Base& base : cantidades) {
@@ -21,6 +22,18 @@ ArbolCodificacion::ArbolCodificacion(vector<Base> cantidades){
             minHeap.push(nuevoNodo);
         }
     }
+
+    minHeap.push(new NodoCodificacion('L', 0)); // Nodo de delimitador
+    int contador = 1;
+
+    //Posible uso para mantener el rango en 8 bits
+    // while (!cola.empty()) {
+    //     NodoCodificacion* nodoActual = cola.top();
+    //     nodoActual->setFrecuencia(contador);
+    //     minHeap.push(nodoActual);
+    //     cola.pop();
+    //     contador+=2;
+    // }
 
     while (minHeap.size() > 1) {
         NodoCodificacion* izquierdo = minHeap.top();
@@ -36,10 +49,45 @@ ArbolCodificacion::ArbolCodificacion(vector<Base> cantidades){
     }
 
     this->raiz = minHeap.top();
+
+    for (Base& base : cantidades) {
+        cout << base.obtenerBase() << ": " << base.obtenerFrecuencia() << " repeticiones.\n";
+    }
 }
 
 NodoCodificacion *ArbolCodificacion::getRaiz(){
     return this->raiz;
+}
+
+vector<bool> ArbolCodificacion::obtenerCodigoDeBase(char baseBuscada) {
+    return obtenerCodigo(this->raiz, baseBuscada, {});
+}
+
+vector<bool> ArbolCodificacion::obtenerCodigo(NodoCodificacion* nodo, char baseBuscada, vector<bool> codigoActual) {
+    if (nodo == nullptr) {
+        return {};
+    }
+
+
+    if (nodo->esHoja() && nodo->getBase() == baseBuscada) {
+        return codigoActual;
+    }
+
+    codigoActual.push_back(false);
+    vector<bool> codigoIzq = obtenerCodigo(nodo->getHijoIzq(), baseBuscada, codigoActual);
+    if (!codigoIzq.empty()) {
+        return codigoIzq;
+    }
+    codigoActual.pop_back();
+
+    codigoActual.push_back(true);
+    vector<bool> codigoDer = obtenerCodigo(nodo->getHijoDer(), baseBuscada, codigoActual);
+    if (!codigoDer.empty()) {
+        return codigoDer;
+    }
+    codigoActual.pop_back();
+
+    return {};
 }
 
 void imprimirNodo(NodoCodificacion* nodo, string codigoActual = "", string prefijo = "", bool esIzquierdo = true) {
@@ -69,4 +117,23 @@ void ArbolCodificacion::imprimirArbol() {
         return;
     }
     imprimirNodo(this->raiz);
+}
+
+char ArbolCodificacion::obtenerBaseDeDato(vector<bool> codigoBuscado)
+{
+    NodoCodificacion* nodoActual = this->raiz;
+    for (bool bit : codigoBuscado) {
+        if (nodoActual == nullptr) {
+            return NULL;
+        }
+        if (bit == false) {
+            nodoActual = nodoActual->getHijoIzq();
+        } else {
+            nodoActual = nodoActual->getHijoDer();
+        }
+    }
+    if (nodoActual == nullptr || !nodoActual->esHoja()) {
+        return NULL;
+    }
+    return nodoActual->getBase();
 }

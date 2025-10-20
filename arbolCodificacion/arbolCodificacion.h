@@ -15,7 +15,10 @@ class ArbolCodificacion {
     public:
         ArbolCodificacion(vector<Base> cantidades);
         NodoCodificacion* getRaiz();
+        vector<bool> obtenerCodigoDeBase(char baseBuscada);
+        vector<bool> obtenerCodigo(NodoCodificacion* nodo, char baseBuscada, vector<bool> codigoActual);
         void imprimirArbol();
+        char obtenerBaseDeDato(vector<bool> codigoBuscado);
 };
 
 #endif

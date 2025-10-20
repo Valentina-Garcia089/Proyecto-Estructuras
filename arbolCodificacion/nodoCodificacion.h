@@ -15,6 +15,7 @@ class NodoCodificacion {
     public:
         NodoCodificacion(char base, int frecuencia);
         ~NodoCodificacion();
+        void setFrecuencia(int frecuencia);
         char getBase() const;
         int getFrecuencia() const;
         NodoCodificacion* getHijoIzq();

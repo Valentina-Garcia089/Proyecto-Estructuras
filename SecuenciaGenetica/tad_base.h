@@ -20,6 +20,7 @@ class Base {
         void actualizaFrecuencia();
         vector<char> getRepresenta() const;
         void setFrecuencia(int frecuencia);
+        Base operator+(const Base& other);
 };
 
 #endif

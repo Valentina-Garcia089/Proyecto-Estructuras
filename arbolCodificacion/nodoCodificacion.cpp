@@ -17,6 +17,11 @@ NodoCodificacion::~NodoCodificacion(){
     this->hijoIzq = nullptr;
 }
 
+void NodoCodificacion::setFrecuencia(int frecuencia)
+{
+    this->frecuencia = frecuencia;
+}
+
 char NodoCodificacion::getBase() const{
     return this->base;
 }
