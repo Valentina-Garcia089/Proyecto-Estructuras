@@ -20,6 +20,7 @@ class Sistema {
         int verificaJustificacion(string secuencia);
         void guardarSecuencias(string nombre_archivo);
         void enmascararSecuencia(string subsecuencia);
+        void codificarSecuencias(string nombreArchivo);
         //TODO: Cambiar a codificar/comprimir
         void arbolCodificacion(string nombreSecuencia);
         vector <SecuenciaGenetica> obtenerConjuntoSec();

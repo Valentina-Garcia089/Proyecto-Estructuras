@@ -18,6 +18,4 @@ class ArbolCodificacion {
         void imprimirArbol();
 };
 
-#include "arbolCodificacion.hxx"
-
 #endif

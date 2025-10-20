@@ -91,6 +91,10 @@ bool Sistema::cargaDeArchivo(string archivito){
     }
 
     cout << conjuntoSecuencias.size() << " secuencias cargadas correctamente de " << archivito << '\n';
+    
+    for (SecuenciaGenetica& s : conjuntoSecuencias) {
+        s.contarBases();
+    }
     return true;
 }
 
@@ -180,7 +184,6 @@ void Sistema::histograma(string nombreSecuencia){
     for(SecuenciaGenetica& recorre : conjuntoSecuencias){
         if(recorre.getNombre() == nombreSecuencia || recorre.getNombre() == nombreSecuencia + "\r"){
             cout << recorre.getNombre();
-            recorre.contarBases();
 
             cout << "\n";
             for(Base& muestraFrec : recorre.getConteo()){
@@ -307,11 +310,26 @@ void Sistema::enmascararSecuencia(string subsecuencia) {
     }
 }
 
+void Sistema::codificarSecuencias(string nombreArchivo)
+{
+    
+    
+    ofstream salida(nombreArchivo + ".fabin", ios::out | ios::trunc);
+    if (!salida.is_open()) {
+        cout << "Error guardando en " << nombreArchivo << ".\n";
+        return;
+    }
+
+
+}
+
 //TODO: Cambiar a codificar/comprimir
 void Sistema::arbolCodificacion(string nombreSecuencia){
     for(SecuenciaGenetica& recorre : conjuntoSecuencias){
         if(recorre.getNombre() == nombreSecuencia || recorre.getNombre() == nombreSecuencia + "\r"){
-            recorre.contarBases();
+            for (Base& base : recorre.getConteo()) {
+                cout << base.obtenerBase() << ": " << base.obtenerFrecuencia() << " repeticiones.\n";
+            }
             ArbolCodificacion arbol(recorre.getConteo());
             cout << "Árbol de codificación para la secuencia " << recorre.getNombre() << ":\n";
             arbol.imprimirArbol();

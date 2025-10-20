@@ -61,6 +61,7 @@ int SecuenciaGenetica::getAnchoJustificacion() const {
 
 void SecuenciaGenetica::contarBases(){
     for(Base& recorre : conteo){
+        recorre.setFrecuencia(0);
         for(char recorre_2 : datos){
             if(recorre_2 == '\n') continue; // Se ignoran los saltos de línea
             if(recorre.obtenerBase() == recorre_2){

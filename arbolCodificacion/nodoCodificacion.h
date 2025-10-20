@@ -22,9 +22,6 @@ class NodoCodificacion {
         void setHijoIzq(NodoCodificacion* izquierda);
         void setHijoDer(NodoCodificacion* derecha);
         bool esHoja();
-        bool operator<(const NodoCodificacion& other) const;
 };
-
-#include "nodoCodificacion.hxx"
 
 #endif

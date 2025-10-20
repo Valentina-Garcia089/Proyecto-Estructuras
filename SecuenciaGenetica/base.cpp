@@ -34,3 +34,7 @@ vector<char> Base::getRepresenta() const
 {
     return representa;
 }
+
+void Base::setFrecuencia(int frecuencia){
+    this->frecuencia = frecuencia;
+}

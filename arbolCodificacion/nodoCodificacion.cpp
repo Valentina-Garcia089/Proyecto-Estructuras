@@ -13,6 +13,8 @@ NodoCodificacion::NodoCodificacion(char base, int frecuencia){
 NodoCodificacion::~NodoCodificacion(){
     delete this->hijoDer;
     delete this->hijoIzq;
+    this->hijoDer = nullptr;
+    this->hijoIzq = nullptr;
 }
 
 char NodoCodificacion::getBase() const{
@@ -47,8 +49,4 @@ bool NodoCodificacion::esHoja(){
     }
 
     return false;
-}
-
-bool NodoCodificacion::operator<(const NodoCodificacion& other) const {
-    return this->frecuencia < other.getFrecuencia();
 }
