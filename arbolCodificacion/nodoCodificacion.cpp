@@ -1,5 +1,5 @@
 #include <iostream>
-#include "NodoCodificacion.h"
+#include "nodoCodificacion.h"
 
 using namespace std;
 

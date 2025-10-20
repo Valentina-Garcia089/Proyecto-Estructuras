@@ -313,14 +313,16 @@ void Sistema::enmascararSecuencia(string subsecuencia) {
 //TODO: Cambiar a codificar/comprimir
 void Sistema::codificarSecuencias(string nombreArchivo)
 {   
-    // if (nombreArchivo.find(".fabin") != string::npos) {
-    //     nombreArchivo+= ".fabin";
-    // }
-    // ofstream salida(nombreArchivo, ios::out | ios::trunc);
-    // if (!salida.is_open()) {
-    //     cout << "Error guardando en " << nombreArchivo << ".\n";
-    //     return;
-    // }
+    if (nombreArchivo.find(".fabin") == string::npos) {
+        nombreArchivo += ".fabin";
+    }
+
+    // Abrir en modo binario
+    ofstream salida(nombreArchivo, ios::out | ios::trunc | ios::binary);
+    if (!salida.is_open()) {
+        cout << "Error guardando en " << nombreArchivo << ".\n";
+        return;
+    }
 
     vector<vector<Base>> todosLosConteos;
     for (SecuenciaGenetica& sec : conjuntoSecuencias) {
@@ -348,6 +350,92 @@ void Sistema::codificarSecuencias(string nombreArchivo)
     ArbolCodificacion arbol(nuevoConteo);
     arbol.imprimirArbol();
 
+    vector<Base> bases = arbol.obtenerBasesMinimizadas();
+
+    u_int8_t tam_ref = static_cast<u_int8_t>(bases.size());
+
+    // Guardar la cantidad de bases dentro del archivo (escribir el valor, no una dirección inválida)
+    salida.write(reinterpret_cast<const char*>(&tam_ref), sizeof(tam_ref));
+
+    for (Base& base : bases) {
+        cout << base.obtenerBase() << " " << base.obtenerFrecuencia() << endl;
+        char base_char = base.obtenerBase();
+        u_int8_t freq = static_cast<u_int8_t>(base.obtenerFrecuencia());
+        salida.write(reinterpret_cast<const char*>(&base_char), sizeof(base_char));
+        salida.write(reinterpret_cast<const char*>(&freq), sizeof(freq));
+    }
+
+    for (SecuenciaGenetica& sec : conjuntoSecuencias) {
+        cout << "Codificando secuencia: " << sec.getNombre() << endl;
+        vector<char> datos = sec.getDatos();
+        vector<bool> codigoCompleto;
+
+        u_int8_t anchoJustificacion = static_cast<u_int8_t>(sec.getAnchoJustificacion());
+        salida.write(reinterpret_cast<const char*>(&anchoJustificacion), sizeof(anchoJustificacion));
+        u_int8_t tam_nombre = static_cast<u_int8_t>(sec.getNombre().size());
+        salida.write(reinterpret_cast<const char*>(&tam_nombre), sizeof(tam_nombre));
+        salida.write(sec.getNombre().c_str(), sec.getNombre().size());
+
+        for (char c : datos) {
+            vector<bool> codigoBase = arbol.obtenerCodigoDeBase(c);
+            codigoCompleto.insert(codigoCompleto.end(), codigoBase.begin(), codigoBase.end());
+        }
+
+        vector<bool> codigoDelim = arbol.obtenerCodigoDeBase('L');
+        codigoCompleto.insert(codigoCompleto.end(), codigoDelim.begin(), codigoDelim.end());
+
+        // Agrupar bits en bytes
+        size_t num_bytes = (codigoCompleto.size() + 7) / 8;
+        vector<u_int8_t> bytes(num_bytes, 0);
+        for (size_t i = 0; i < codigoCompleto.size(); ++i) {
+            if (codigoCompleto[i]) {
+                bytes[i / 8] |= (1 << (7 - (i % 8)));
+            }
+        }
+        salida.write(reinterpret_cast<const char*>(bytes.data()), bytes.size());
+    }
+
+    salida.close();
+}
+
+void Sistema::decodificarSecuencias(string nombreArchivo){
+    ifstream entrada(nombreArchivo, ios::in | ios::binary);
+    if (!entrada.is_open()) {
+        cout << "Error leyendo en " << nombreArchivo << ".\n";
+        return;
+    }
+
+    u_int8_t tam_ref_leido;
+    entrada.read(reinterpret_cast<char*>(&tam_ref_leido), sizeof(tam_ref_leido));
+    cout << "Tamaño de referencia: " << (int)tam_ref_leido << endl;
+
+    vector<Base> bases_leidas;
+
+    for (int i = 0; i < tam_ref_leido; i++) {
+        char base_leida;
+        u_int8_t frecuencia_leida;
+        entrada.read(reinterpret_cast<char*>(&base_leida), sizeof(base_leida));
+        entrada.read(reinterpret_cast<char*>(&frecuencia_leida), sizeof(frecuencia_leida));
+        bases_leidas.push_back(Base(base_leida, frecuencia_leida, {}));
+        cout << "Base leida: " << base_leida << " Frecuencia leida: " << (int)frecuencia_leida << endl;
+    }
+    entrada.close();
+
+    ArbolCodificacion arboldecodificacion(bases_leidas);
+
+    while(!entrada.eof()){
+        vector<bool> codigoLeido;
+        char byte_leido;
+        entrada.read(&byte_leido, sizeof(byte_leido));
+        for (int i = 7; i >= 0; i--) {
+            bool bit = (byte_leido >> i) & 1;
+            codigoLeido.push_back(bit);
+        }
+    }
+
+
+
+    arboldecodificacion.imprimirArbol();
 }
 
 void Sistema::arbolCodificacion(string nombreSecuencia){
@@ -359,7 +447,6 @@ void Sistema::arbolCodificacion(string nombreSecuencia){
             ArbolCodificacion arbol(recorre.getConteo());
             cout << "Árbol de codificación para la secuencia " << recorre.getNombre() << ":\n";
             arbol.imprimirArbol();
-            cout << arbol.obtenerBaseDeDato({0,0,0,0,0,0,0,0});
             return;
         }
     }

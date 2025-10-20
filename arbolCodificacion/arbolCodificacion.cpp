@@ -2,7 +2,6 @@
 #include "arbolCodificacion.h"
 #include "../SecuenciaGenetica/tad_base.h"
 #include <algorithm>
-#include <queue>
 
 struct Comparador {
     bool operator()(NodoCodificacion* a, NodoCodificacion* b) {
@@ -19,21 +18,25 @@ ArbolCodificacion::ArbolCodificacion(vector<Base> cantidades){
     for (Base& base : cantidades) {
         if (base.obtenerFrecuencia() > 0) {
             NodoCodificacion* nuevoNodo = new NodoCodificacion(base.obtenerBase(), base.obtenerFrecuencia());
-            minHeap.push(nuevoNodo);
+            cola.push(nuevoNodo);
         }
     }
 
-    minHeap.push(new NodoCodificacion('L', 0)); // Nodo de delimitador
+    cola.push(new NodoCodificacion('L', 0)); // Nodo de delimitador
+
     int contador = 1;
 
     //Posible uso para mantener el rango en 8 bits
-    // while (!cola.empty()) {
-    //     NodoCodificacion* nodoActual = cola.top();
-    //     nodoActual->setFrecuencia(contador);
-    //     minHeap.push(nodoActual);
-    //     cola.pop();
-    //     contador+=2;
-    // }
+    while (!cola.empty()) {
+        NodoCodificacion* nodoActual = cola.top();
+        nodoActual->setFrecuencia(contador);
+        minHeap.push(nodoActual);
+        if (nodoActual->getBase() != 'L'){
+            bases.push_back(Base(nodoActual->getBase(),nodoActual->getFrecuencia(),{}));   
+        }
+        cola.pop();
+        contador+=2;
+    }
 
     while (minHeap.size() > 1) {
         NodoCodificacion* izquierdo = minHeap.top();
@@ -136,4 +139,9 @@ char ArbolCodificacion::obtenerBaseDeDato(vector<bool> codigoBuscado)
         return NULL;
     }
     return nodoActual->getBase();
+}
+
+vector<Base> ArbolCodificacion::obtenerBasesMinimizadas()
+{
+    return this->bases;
 }
