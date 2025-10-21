@@ -57,8 +57,11 @@ int main () {
                         } 
                         //TODO: Cambiar a codificar/comprimir
                         //TODO: Agregar a el menu de ayuda
-                        else if (comando == "arbol_codificacion" && !argumento.empty()){
+                        else if (comando == "codificar" && !argumento.empty()){
                             sistemita.codificarSecuencias(argumento);
+                        }
+                        else if (comando == "decodificar" && !argumento.empty()){
+                            sistemita.decodificarSecuencias(argumento);
                         }
                         else if(comando== "ayuda"){
                             comandoAyuda(argumento, 2);

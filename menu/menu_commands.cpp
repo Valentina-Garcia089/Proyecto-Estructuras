@@ -30,7 +30,7 @@ void comandoAyuda(string argumento, int momento) {
 
     else if(momento == 2){
         if(argumento.empty()){
-            printf("Comandos disponibles: listar_secuencias, histograma, es_subsecuencia, enmascarar, guardar, salir, ayuda\n");
+            printf("Comandos disponibles: listar_secuencias, histograma, es_subsecuencia, enmascarar, codificar, decodificar, guardar, salir, ayuda\n");
         }
         else{
             if(argumento == "listar_secuencias"){
@@ -52,6 +52,14 @@ void comandoAyuda(string argumento, int momento) {
             else if(argumento == "guardar"){
                 printf("Uso: guardar <nombre_archivo>\n");
                 printf("Descripción: guarda en el archivo las secuencias cargadas en memoria.\n");
+            }
+            else if (argumento == "codificar"){
+                printf("Uso: codificar <nombre_archivo>\n");
+                printf("Descripción: codifica y guarda las secuencias cargadas en memoria en un archivo binario.\n");
+            }
+            else if (argumento == "decodificar"){
+                printf("Uso: decodificar <nombre_archivo>\n");
+                printf("Descripción: decodifica un archivo binario y carga las secuencias en memoria.\n");
             }
             else{
                 comandoNoReconocido();
