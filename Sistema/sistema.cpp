@@ -310,7 +310,6 @@ void Sistema::enmascararSecuencia(string subsecuencia) {
     }
 }
 
-//TODO: Cambiar a codificar/comprimir
 void Sistema::codificarSecuencias(string nombreArchivo)
 {   
     if (nombreArchivo.find(".fabin") == string::npos) {
@@ -381,32 +380,46 @@ void Sistema::codificarSecuencias(string nombreArchivo)
             codigoCompleto.insert(codigoCompleto.end(), codigoBase.begin(), codigoBase.end());
         }
 
+        //Se guarda en un vector<bool> ya que está optimizado solo para usar 1 bit por valor
         vector<bool> codigoDelim = arbol.obtenerCodigoDeBase('L');
         codigoCompleto.insert(codigoCompleto.end(), codigoDelim.begin(), codigoDelim.end());
 
         // Agrupar bits en bytes
+        // Calcular la cantidad de bytes necesarios
         size_t num_bytes = (codigoCompleto.size() + 7) / 8;
+        //Crear el vector ya iniciado con el tamaño para la cantidad de bytes necesarios
         vector<u_int8_t> bytes(num_bytes, 0);
+        // |= es la operación OR, se usa para establecer bits individuales en el byte
+        // bytes[i / 8] accede al byte correspondiente
+        // (1 << (7 - (i % 8))) calcula la posición del bit dentro del byte
+        // Solo inserta bits en verdadero
+        //Esta compleja la vaina
         for (size_t i = 0; i < codigoCompleto.size(); ++i) {
             if (codigoCompleto[i]) {
                 bytes[i / 8] |= (1 << (7 - (i % 8)));
             }
         }
+
+        //Escribe los datos
         salida.write(reinterpret_cast<const char*>(bytes.data()), bytes.size());
     }
 
     salida.close();
 }
 
-//TODO: hacerlo ver menos chatsito
 void Sistema::decodificarSecuencias(string nombreArchivo){
+    if (nombreArchivo.find(".fabin") == string::npos) {
+        cout << "Tipo de archivo invalido, archivo .fabin necesario" << endl;
+        return;
+    }
+
     ifstream entrada(nombreArchivo, ios::in | ios::binary);
     if (!entrada.is_open()) {
         cout << "Error leyendo en " << nombreArchivo << ".\n";
         return;
     }
 
-    // Leer cantidad de bases y construir vector<Base>
+    // Leer cantidad de bases que estan en el archivo
     u_int8_t tam_ref_leido;
     entrada.read(reinterpret_cast<char*>(&tam_ref_leido), sizeof(tam_ref_leido));
     if (!entrada) {
@@ -416,6 +429,7 @@ void Sistema::decodificarSecuencias(string nombreArchivo){
     }
     cout << "Tamaño de referencia: " << (int)tam_ref_leido << endl;
 
+    //Leer las bases necesarias para el arbol
     vector<Base> bases_leidas;
     for (int i = 0; i < tam_ref_leido; i++) {
         char base_leida;
@@ -423,7 +437,7 @@ void Sistema::decodificarSecuencias(string nombreArchivo){
         entrada.read(reinterpret_cast<char*>(&base_leida), sizeof(base_leida));
         entrada.read(reinterpret_cast<char*>(&frecuencia_leida), sizeof(frecuencia_leida));
         if (!entrada) {
-            cout << "Archivo corrupto al leer tablas de frecuencia.\n";
+            cout << "Dato inesperado dentro del archivo.\n";
             entrada.close();
             return;
         }
@@ -437,72 +451,81 @@ void Sistema::decodificarSecuencias(string nombreArchivo){
     // Reemplazar todas las secuencias en memoria por las decodificadas
     conjuntoSecuencias.clear();
 
-    // Ahora leer secuencia por secuencia: cada una tiene (anchoJust, tam_nombre, nombre) seguido de su flujo de bits terminado por el código 'L'
-    while (true) {
-        // Leer metadatos de la secuencia (si no hay más datos, salimos)
+    bool seguir = true;
+
+    //Empezar a leer las secuencias
+    while (!entrada.eof()) {
+        // Leer el ancho de justificacion
         u_int8_t anchoJust;
         if (!entrada.read(reinterpret_cast<char*>(&anchoJust), sizeof(anchoJust))) break;
 
+        // Leer el tamaño del nombre
         u_int8_t tam_nombre;
         if (!entrada.read(reinterpret_cast<char*>(&tam_nombre), sizeof(tam_nombre))) break;
 
+        // 
         string nombreSeq;
         if (tam_nombre > 0) {
             nombreSeq.resize(tam_nombre);
             entrada.read(&nombreSeq[0], tam_nombre);
-            if (!entrada) break;
+            if (!entrada) {
+                cout << "Error al leer el nombre de la secuencia" << endl;
+                break;
+            }
         }
 
         // Decodificar bits hasta encontrar el delimitador 'L' o EOF
         vector<char> datos_decodificados;
         vector<bool> codigoActual;
+        bool secuenciaTerminada = false;
 
-        // Leemos bytes uno a uno y procesamos bits MSB->LSB
-        while (true) {
+        // Leer los bytes
+        while (!secuenciaTerminada) {
             u_int8_t byte_leido;
+            //Por si acaso de llega al EOF 
             if (!entrada.read(reinterpret_cast<char*>(&byte_leido), sizeof(byte_leido))) {
-                // EOF alcanzado antes del delimitador: guardar lo que tengamos y salir
+                // Guardar lo q haya pendiente 
                 if (!codigoActual.empty()) {
                     // intentar decodificar cualquier código pendiente
-                    char ch = arboldecodificacion.obtenerBaseDeDato(codigoActual);
-                    if (ch != '\0' && ch != 'L') datos_decodificados.push_back(ch);
+                    char dato = arboldecodificacion.obtenerBaseDeDato(codigoActual);
+                    if (dato != '\0' && dato != 'L') datos_decodificados.push_back(dato);
                 }
                 break;
             }
+            //Se procesa cada byte de derecha a izq
             for (int i = 7; i >= 0; --i) {
+                //Se mueve el bit para tomar el valor de cada uno 
+                //y meterlo dentro del vector<bool>
                 bool bit = (byte_leido >> i) & 1;
                 codigoActual.push_back(bit);
 
+                //Se intenta decodificar la secuencia de bits
                 char posible = arboldecodificacion.obtenerBaseDeDato(codigoActual);
                 if (posible != '\0') {
                     if (posible == 'L') {
-                        // Fin de la secuencia actual
+                        //Se termina la secuenia
                         codigoActual.clear();
-                        goto sequence_finished;
+                        secuenciaTerminada = true;
                     } else {
+                        //Si no se termina, se agrega el dato al vector
                         datos_decodificados.push_back(posible);
                         codigoActual.clear();
                     }
                 }
             }
-        } // end reading bytes for this sequence
+        }
 
-        sequence_finished: ;
-
-        // Crear y almacenar la secuencia decodificada
+        // Crear y guardar la secuencias
         SecuenciaGenetica sec;
         sec.setNombre(nombreSeq);
         sec.setDatos(datos_decodificados);
         sec.setAnchoJustificacion(static_cast<int>(anchoJust));
         conjuntoSecuencias.push_back(sec);
-
-        // Si EOF ya fue alcanzado, salimos del bucle principal
-        if (entrada.eof()) break;
     }
 
     entrada.close();
 
-    // Actualizar conteos de bases en memoria
+    // Re-contar las bases
     for (SecuenciaGenetica& s : conjuntoSecuencias) {
         s.contarBases();
     }
