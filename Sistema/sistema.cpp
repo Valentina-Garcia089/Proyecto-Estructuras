@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <cstdint>
 
 using namespace std;
 
@@ -266,20 +267,23 @@ int Sistema::verificaJustificacion(string secuencia)
         return -1;
 
     //Compara todos los tamaños de las líneas 
-    int tam_ref = tam[0];
+    int tamañoRef = tam[0];
     // Llega hasta la penultima niña porque la linea final si podría tener un tamaño diferente
     for (int i = 1; i + 1 < tam.size(); ++i) {
-        if (tam[i] != tam_ref) 
+        if (tam[i] != tamañoRef) 
             return -1;
     }
 
     // La última línea puede ser menor o igual al resto, PERO NO MAYOR
-    if (tam.back() > tam_ref) 
+    if (tam.back() > tamañoRef) 
         return -1;
 
     //Si la secuencia está justificada, retorna la cantidad de caracteres por línea
-    return tam_ref;
+    return tamañoRef;
 }
+
+
+
 
 
 void Sistema::enmascararSecuencia(string subsecuencia) {
@@ -310,6 +314,10 @@ void Sistema::enmascararSecuencia(string subsecuencia) {
     }
 }
 
+
+
+
+
 void Sistema::codificarSecuencias(string nombreArchivo)
 {   
     if (nombreArchivo.find(".fabin") == string::npos) {
@@ -325,41 +333,48 @@ void Sistema::codificarSecuencias(string nombreArchivo)
 
     vector<vector<Base>> todosLosConteos;
     for (SecuenciaGenetica& sec : conjuntoSecuencias) {
+        // Guardo en el vector nuevo un vector que contiene la base, la frecuencia y si es el caso las letras que representan a esta misma base 
         todosLosConteos.push_back(sec.getConteo());
     }
 
     vector<Base> nuevoConteo;
 
+    // Tomar cada conteo (base, frecuencia y representación (NO USADO)) de cada secuencia genética y  
     for (vector<Base>& conteo : todosLosConteos) {
         for (Base& base : conteo) {
             bool encontrado = false;
             for (Base& nuevoBase : nuevoConteo) {
                 if (nuevoBase.obtenerBase() == base.obtenerBase()) {
+                    // Sumar frecuencias de las bases de cada Secuencia genética
                     nuevoBase = nuevoBase + base;
                     encontrado = true;
                     break;
                 }
             }
             if (!encontrado) {
-                nuevoConteo.push_back(base);
+                nuevoConteo.push_back(base); // Mete todas las bases existentes de la secuencia al vector de bases
             }
         }
     }
     
+    // Se crea un arbol de tipo ArbolCodificación al cual se le pasará el TOTAL de las bases con sus frecuencias
     ArbolCodificacion arbol(nuevoConteo);
-    arbol.imprimirArbol();
+    arbol.imprimirArbol(); // Se hace solo para verificar cómo queda el arbol
 
     vector<Base> bases = arbol.obtenerBasesMinimizadas();
 
-    u_int8_t tam_ref = static_cast<u_int8_t>(bases.size());
+    // Obtenemos el num de elementos en el vector "bases" y casteamos el valor a un tipo que ocupa solo un byte en memoria
+    uint8_t tamañoRef = static_cast<uint8_t>(bases.size());
 
-    // Guardar la cantidad de bases 
-    salida.write(reinterpret_cast<const char*>(&tam_ref), sizeof(tam_ref));
+    //Los binarios se manejan byte a byte, por esto es necesario hacer la reinterpretación como un puntero a byte
+    //E indica los bytes a escribir
+    salida.write(reinterpret_cast<const char*>(&tamañoRef), sizeof(tamañoRef));
 
+    //Por cada base con frecuencia minimizada, se escribirá en el archivo su base y su respectiva frecuencia
     for (Base& base : bases) {
         cout << base.obtenerBase() << " " << base.obtenerFrecuencia() << endl;
         char base_char = base.obtenerBase();
-        u_int8_t freq = static_cast<u_int8_t>(base.obtenerFrecuencia());
+        uint8_t freq = static_cast<uint8_t>(base.obtenerFrecuencia());
         salida.write(reinterpret_cast<const char*>(&base_char), sizeof(base_char));
         salida.write(reinterpret_cast<const char*>(&freq), sizeof(freq));
     }
@@ -369,9 +384,9 @@ void Sistema::codificarSecuencias(string nombreArchivo)
         vector<char> datos = sec.getDatos();
         vector<bool> codigoCompleto;
 
-        u_int8_t anchoJustificacion = static_cast<u_int8_t>(sec.getAnchoJustificacion());
+        uint8_t anchoJustificacion = static_cast<uint8_t>(sec.getAnchoJustificacion());
         salida.write(reinterpret_cast<const char*>(&anchoJustificacion), sizeof(anchoJustificacion));
-        u_int8_t tam_nombre = static_cast<u_int8_t>(sec.getNombre().size());
+        uint8_t tam_nombre = static_cast<uint8_t>(sec.getNombre().size());
         salida.write(reinterpret_cast<const char*>(&tam_nombre), sizeof(tam_nombre));
         salida.write(sec.getNombre().c_str(), sec.getNombre().size());
 
@@ -388,7 +403,7 @@ void Sistema::codificarSecuencias(string nombreArchivo)
         // Calcular la cantidad de bytes necesarios
         size_t num_bytes = (codigoCompleto.size() + 7) / 8;
         //Crear el vector ya iniciado con el tamaño para la cantidad de bytes necesarios
-        vector<u_int8_t> bytes(num_bytes, 0);
+        vector<uint8_t> bytes(num_bytes, 0);
         // |= es la operación OR, se usa para establecer bits individuales en el byte
         // bytes[i / 8] accede al byte correspondiente
         // (1 << (7 - (i % 8))) calcula la posición del bit dentro del byte
@@ -420,20 +435,20 @@ void Sistema::decodificarSecuencias(string nombreArchivo){
     }
 
     // Leer cantidad de bases que estan en el archivo
-    u_int8_t tam_ref_leido;
-    entrada.read(reinterpret_cast<char*>(&tam_ref_leido), sizeof(tam_ref_leido));
+    uint8_t tamañoRef_leido;
+    entrada.read(reinterpret_cast<char*>(&tamañoRef_leido), sizeof(tamañoRef_leido));
     if (!entrada) {
         cout << "Archivo corrupto o incompleto (header).\n";
         entrada.close();
         return;
     }
-    cout << "Tamaño de referencia: " << (int)tam_ref_leido << endl;
+    cout << "Tamaño de referencia: " << (int)tamañoRef_leido << endl;
 
     //Leer las bases necesarias para el arbol
     vector<Base> bases_leidas;
-    for (int i = 0; i < tam_ref_leido; i++) {
+    for (int i = 0; i < tamañoRef_leido; i++) {
         char base_leida;
-        u_int8_t frecuencia_leida;
+        uint8_t frecuencia_leida;
         entrada.read(reinterpret_cast<char*>(&base_leida), sizeof(base_leida));
         entrada.read(reinterpret_cast<char*>(&frecuencia_leida), sizeof(frecuencia_leida));
         if (!entrada) {
@@ -456,11 +471,11 @@ void Sistema::decodificarSecuencias(string nombreArchivo){
     //Empezar a leer las secuencias
     while (!entrada.eof()) {
         // Leer el ancho de justificacion
-        u_int8_t anchoJust;
+        uint8_t anchoJust;
         if (!entrada.read(reinterpret_cast<char*>(&anchoJust), sizeof(anchoJust))) break;
 
         // Leer el tamaño del nombre
-        u_int8_t tam_nombre;
+        uint8_t tam_nombre;
         if (!entrada.read(reinterpret_cast<char*>(&tam_nombre), sizeof(tam_nombre))) break;
 
         // 
@@ -481,7 +496,7 @@ void Sistema::decodificarSecuencias(string nombreArchivo){
 
         // Leer los bytes
         while (!secuenciaTerminada) {
-            u_int8_t byte_leido;
+            uint8_t byte_leido;
             //Por si acaso de llega al EOF 
             if (!entrada.read(reinterpret_cast<char*>(&byte_leido), sizeof(byte_leido))) {
                 // Guardar lo q haya pendiente 

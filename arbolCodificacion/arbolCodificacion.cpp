@@ -3,38 +3,50 @@
 #include "../SecuenciaGenetica/tad_base.h"
 #include <algorithm>
 
+using namespace std;
+
+// Objeto que se puede usar como si fuera una función
 struct Comparador {
     bool operator()(NodoCodificacion* a, NodoCodificacion* b) {
+        // Devuelve true si "a" tiene una frecuencia mayor a la de "b"
+        // Al devolver true, indica que b tiene más prioridad porque "a" es mayor (MIN-HEAP)
         return a->getFrecuencia() > b->getFrecuencia();
     }
 };
 
-using namespace std;
+
+
+
 
 ArbolCodificacion::ArbolCodificacion(vector<Base> cantidades){
-    priority_queue<NodoCodificacion*, vector<NodoCodificacion*>, Comparador> cola;
-    priority_queue<NodoCodificacion*, vector<NodoCodificacion*>, Comparador> minHeap;
+    // <Tipo de dato que guarda la cola, contenedor donde se guardan los datos, estructura que define cómo comparar> 
+    priority_queue<NodoCodificacion*, vector<NodoCodificacion*>, Comparador> cola; // frecuencias originales
+    priority_queue<NodoCodificacion*, vector<NodoCodificacion*>, Comparador> minHeap; // frecuencias minimizadas
 
     for (Base& base : cantidades) {
+        // Bases con frecuencia > 0 = bases que aparecen en las secuencias genéticas del archivo 
         if (base.obtenerFrecuencia() > 0) {
             NodoCodificacion* nuevoNodo = new NodoCodificacion(base.obtenerBase(), base.obtenerFrecuencia());
             cola.push(nuevoNodo);
         }
     }
 
-    cola.push(new NodoCodificacion('L', 0)); // Nodo de delimitador
+    cola.push(new NodoCodificacion('L', 0)); // Nodo de delimitador (Separar secuencias sin usar un entero) - Queda como primer elemento
 
     int contador = 1;
 
-    //Posible uso para mantener el rango en 8 bits
+    //Uso para mantener el rango en 8 bits (cada byte va de 0 a 255 en entero)
+    // Minimizar las frecuencias de las bases para que quepan en un solo byte
     while (!cola.empty()) {
-        NodoCodificacion* nodoActual = cola.top();
+        NodoCodificacion* nodoActual = cola.top(); // El menor
         nodoActual->setFrecuencia(contador);
         minHeap.push(nodoActual);
+
+        // No se mete el delimitador ya que no hace parte de las bases de una secuencia genetica
         if (nodoActual->getBase() != 'L'){
             bases.push_back(Base(nodoActual->getBase(),nodoActual->getFrecuencia(),{}));   
         }
-        cola.pop();
+        cola.pop(); // Una vez ingresada la base con la frecuencia minimizada en el vector de bases, puede eliminarse de la cola 
         contador+=2;
     }
 
@@ -44,6 +56,7 @@ ArbolCodificacion::ArbolCodificacion(vector<Base> cantidades){
         NodoCodificacion* derecho = minHeap.top();
         minHeap.pop();
 
+        // Los nodos internos no contienen el caracter, solo la suma de las frecuencias
         NodoCodificacion* nuevoNodo = new NodoCodificacion('\0', izquierdo->getFrecuencia() + derecho->getFrecuencia());
         nuevoNodo->setHijoIzq(izquierdo);
         nuevoNodo->setHijoDer(derecho);
@@ -58,15 +71,28 @@ ArbolCodificacion::ArbolCodificacion(vector<Base> cantidades){
     }
 }
 
+
+
+
+
 NodoCodificacion *ArbolCodificacion::getRaiz(){
     return this->raiz;
 }
 
+
+
+
+
+// EJ -> A: 0011
 vector<bool> ArbolCodificacion::obtenerCodigoDeBase(char baseBuscada) {
     return obtenerCodigo(this->raiz, baseBuscada, {});
 }
 
-vector<bool> ArbolCodificacion::obtenerCodigo(NodoCodificacion* nodo, char baseBuscada, vector<bool> codigoActual) {
+
+
+
+
+vector<bool> ArbolCodificacion::obtenerCodigo(NodoCodificacion* nodo, char baseBuscada, vector<bool> codigoActual){
     if (nodo == nullptr) {
         return {};
     }
@@ -93,6 +119,10 @@ vector<bool> ArbolCodificacion::obtenerCodigo(NodoCodificacion* nodo, char baseB
     return {};
 }
 
+
+
+
+
 void imprimirNodo(NodoCodificacion* nodo, string codigoActual = "", string prefijo = "", bool esIzquierdo = true) {
     if (nodo != nullptr) {
         cout << prefijo;
@@ -114,6 +144,10 @@ void imprimirNodo(NodoCodificacion* nodo, string codigoActual = "", string prefi
     }
 }
 
+
+
+
+
 void ArbolCodificacion::imprimirArbol() {
     if (this->raiz == nullptr) {
         cout << "El árbol está vacío.\n";
@@ -122,8 +156,11 @@ void ArbolCodificacion::imprimirArbol() {
     imprimirNodo(this->raiz);
 }
 
-char ArbolCodificacion::obtenerBaseDeDato(vector<bool> codigoBuscado)
-{
+
+
+
+
+char ArbolCodificacion::obtenerBaseDeDato(vector<bool> codigoBuscado){
     NodoCodificacion* nodoActual = this->raiz;
     for (bool bit : codigoBuscado) {
         if (nodoActual == nullptr) {
@@ -141,7 +178,10 @@ char ArbolCodificacion::obtenerBaseDeDato(vector<bool> codigoBuscado)
     return nodoActual->getBase();
 }
 
-vector<Base> ArbolCodificacion::obtenerBasesMinimizadas()
-{
+
+
+
+
+vector<Base> ArbolCodificacion::obtenerBasesMinimizadas(){
     return this->bases;
 }
