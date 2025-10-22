@@ -379,9 +379,10 @@ void Sistema::codificarSecuencias(string nombreArchivo)
         salida.write(reinterpret_cast<const char*>(&freq), sizeof(freq));
     }
 
+    //Por cada secuencia genética en el archivo, se escribirá en el archivo binario el ancho de la justificación, el nombre de la secuencia con su tamaño y la secuencia (datos)
     for (SecuenciaGenetica& sec : conjuntoSecuencias) {
         cout << "Codificando secuencia: " << sec.getNombre() << endl;
-        vector<char> datos = sec.getDatos();
+        vector<char> datos = sec.getDatos(); //Corresponde a los datos de UNA secuencia genética
         vector<bool> codigoCompleto;
 
         uint8_t anchoJustificacion = static_cast<uint8_t>(sec.getAnchoJustificacion());
@@ -390,26 +391,27 @@ void Sistema::codificarSecuencias(string nombreArchivo)
         salida.write(reinterpret_cast<const char*>(&tam_nombre), sizeof(tam_nombre));
         salida.write(sec.getNombre().c_str(), sec.getNombre().size());
 
+        //Con el arbol de codificación, por cada base dentro de UNA secuencia, se debe obtener su codigo
         for (char c : datos) {
             vector<bool> codigoBase = arbol.obtenerCodigoDeBase(c);
             codigoCompleto.insert(codigoCompleto.end(), codigoBase.begin(), codigoBase.end());
         }
 
         //Se guarda en un vector<bool> ya que está optimizado solo para usar 1 bit por valor
+        //Con el delimitador sabremos cuando termina una secuencia
         vector<bool> codigoDelim = arbol.obtenerCodigoDeBase('L');
         codigoCompleto.insert(codigoCompleto.end(), codigoDelim.begin(), codigoDelim.end());
 
         // Agrupar bits en bytes
         // Calcular la cantidad de bytes necesarios
-        size_t num_bytes = (codigoCompleto.size() + 7) / 8;
+        size_t numBytes = (codigoCompleto.size() + 7) / 8;
         //Crear el vector ya iniciado con el tamaño para la cantidad de bytes necesarios
-        vector<uint8_t> bytes(num_bytes, 0);
+        vector<uint8_t> bytes(numBytes, 0);
         // |= es la operación OR, se usa para establecer bits individuales en el byte
-        // bytes[i / 8] accede al byte correspondiente
+        // [i / 8] Indica que byte debe almacenar al bit actual
         // (1 << (7 - (i % 8))) calcula la posición del bit dentro del byte
-        // Solo inserta bits en verdadero
-        //Esta compleja la vaina
         for (size_t i = 0; i < codigoCompleto.size(); ++i) {
+            // Solo entra si el bit actual es 1 (verdadero) porque el byte ya tiene 0s por defecto
             if (codigoCompleto[i]) {
                 bytes[i / 8] |= (1 << (7 - (i % 8)));
             }
@@ -418,9 +420,12 @@ void Sistema::codificarSecuencias(string nombreArchivo)
         //Escribe los datos
         salida.write(reinterpret_cast<const char*>(bytes.data()), bytes.size());
     }
-
     salida.close();
 }
+
+
+
+
 
 void Sistema::decodificarSecuencias(string nombreArchivo){
     if (nombreArchivo.find(".fabin") == string::npos) {
