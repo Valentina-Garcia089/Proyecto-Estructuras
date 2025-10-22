@@ -439,7 +439,7 @@ void Sistema::decodificarSecuencias(string nombreArchivo){
         return;
     }
 
-    // Leer cantidad de bases que estan en el archivo
+    // Leer cantidad de bases que estan en el archivo (Lee un byte por ser de tipo uint8_t)
     uint8_t tamañoRef_leido;
     entrada.read(reinterpret_cast<char*>(&tamañoRef_leido), sizeof(tamañoRef_leido));
     if (!entrada) {
