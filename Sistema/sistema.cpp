@@ -385,7 +385,7 @@ void Sistema::codificarSecuencias(string nombreArchivo)
         vector<char> datos = sec.getDatos(); //Corresponde a los datos de UNA secuencia genética
         vector<bool> codigoCompleto;
 
-        uint8_t anchoJustificacion = static_cast<uint8_t>(sec.getAnchoJustificacion());
+        uint16_t anchoJustificacion = static_cast<uint16_t>(sec.getAnchoJustificacion());
         salida.write(reinterpret_cast<const char*>(&anchoJustificacion), sizeof(anchoJustificacion));
         uint8_t tam_nombre = static_cast<uint8_t>(sec.getNombre().size());
         salida.write(reinterpret_cast<const char*>(&tam_nombre), sizeof(tam_nombre));
@@ -472,11 +472,12 @@ void Sistema::decodificarSecuencias(string nombreArchivo){
     conjuntoSecuencias.clear();
 
     bool seguir = true;
+    bool finArchivo = false;
 
     //Empezar a leer las secuencias
-    while (!entrada.eof()) {
+    while (!finArchivo) {
         // Leer el ancho de justificacion
-        uint8_t anchoJust;
+        uint16_t anchoJust;
         if (!entrada.read(reinterpret_cast<char*>(&anchoJust), sizeof(anchoJust))) break;
 
         // Leer el tamaño del nombre
@@ -504,21 +505,18 @@ void Sistema::decodificarSecuencias(string nombreArchivo){
             uint8_t byte_leido;
             //Por si acaso de llega al EOF 
             if (!entrada.read(reinterpret_cast<char*>(&byte_leido), sizeof(byte_leido))) {
-                // Guardar lo q haya pendiente 
-                if (!codigoActual.empty()) {
-                    // intentar decodificar cualquier código pendiente
-                    char dato = arboldecodificacion.obtenerBaseDeDato(codigoActual);
-                    if (dato != '\0' && dato != 'L') datos_decodificados.push_back(dato);
-                }
+                // EOF alcanzado: cualquier bit pendiente es padding, descartarlo.
+                // Indicar fin de archivo para salir también del bucle externo y evitar bloqueo.
+                finArchivo = true;
                 break;
             }
+
             //Se procesa cada byte de derecha a izq
             for (int i = 7; i >= 0; --i) {
                 //Se mueve el bit para tomar el valor de cada uno 
                 //y meterlo dentro del vector<bool>
                 bool bit = (byte_leido >> i) & 1;
                 codigoActual.push_back(bit);
-
                 //Se intenta decodificar la secuencia de bits
                 char posible = arboldecodificacion.obtenerBaseDeDato(codigoActual);
                 if (posible != '\0') {
@@ -526,6 +524,7 @@ void Sistema::decodificarSecuencias(string nombreArchivo){
                         //Se termina la secuenia
                         codigoActual.clear();
                         secuenciaTerminada = true;
+                        break;
                     } else {
                         //Si no se termina, se agrega el dato al vector
                         datos_decodificados.push_back(posible);
@@ -541,6 +540,7 @@ void Sistema::decodificarSecuencias(string nombreArchivo){
         sec.setDatos(datos_decodificados);
         sec.setAnchoJustificacion(static_cast<int>(anchoJust));
         conjuntoSecuencias.push_back(sec);
+        if (finArchivo) break;
     }
 
     entrada.close();
@@ -582,13 +582,22 @@ void Sistema::guardarSecuencias(string nombre_archivo) {
     }
 
     int contador = 0;
+    bool primero = true;
+
 
     for (SecuenciaGenetica& sec : conjuntoSecuencias) {
-        salida << ">" << sec.getNombre() << "\n";
+        int temp = 0;
+        if (primero){
+            salida << ">" << sec.getNombre() << "\n";
+            primero = false;
+        } else {
+            salida << "\n>" << sec.getNombre() << "\n";
+        }
+        
 
         string datos(sec.getDatos().data(), sec.getDatos().size());
 
-        int temp = 0;
+        
         for (char c : datos) {
             salida << c;
             if (temp == sec.getAnchoJustificacion() - 1) {
@@ -598,10 +607,9 @@ void Sistema::guardarSecuencias(string nombre_archivo) {
             }
             temp++;
         }
-        salida << "\n";
+
         contador++;
     }
-    
     salida.close();
 
     if (contador == 1) {
