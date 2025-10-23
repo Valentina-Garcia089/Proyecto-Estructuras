@@ -122,7 +122,7 @@ vector<bool> ArbolCodificacion::obtenerCodigo(NodoCodificacion* nodo, char baseB
 
 
 
-
+//Función generada por IA para imprimir una representación visual del árbol
 void imprimirNodo(NodoCodificacion* nodo, string codigoActual = "", string prefijo = "", bool esIzquierdo = true) {
     if (nodo != nullptr) {
         cout << prefijo;
@@ -148,6 +148,7 @@ void imprimirNodo(NodoCodificacion* nodo, string codigoActual = "", string prefi
 
 
 
+//Función generada por IA para imprimir una representación visual del árbol
 void ArbolCodificacion::imprimirArbol() {
     if (this->raiz == nullptr) {
         cout << "El árbol está vacío.\n";
