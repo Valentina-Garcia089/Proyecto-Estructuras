@@ -11,6 +11,4 @@ void comandoAyuda(string argumento, int momento);
 void comandoNoReconocido();
 bool archivoCorrecto(string argumento);
 
-
-
 #endif

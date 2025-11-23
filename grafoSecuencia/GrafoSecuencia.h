@@ -9,15 +9,17 @@ using namespace std;
 
 class GrafoSecuencia {
     private:
-        vector<vector<int>> matrizAdyacencia;
-        vector<Base> nodos;
+        vector<vector<float>> matrizAdyacencia;
+        vector<char> nodos;
+        int ancho;
+        int alto;
     public:
         GrafoSecuencia(SecuenciaGenetica &secuencia);
         void llenarMatrizAdyacencia();
         void mostrarMatrizAdyacencia();
-        tuple<int,vector<Base>> obtenerRutaMasCorta(tuple<int,int> origen, tuple<int,int> destino);
-        tuple<int,vector<Base>> obtenerBaseRemota(tuple<int,int> origen, tuple<int,int> destino);
-        int obtenerCostoRuta(tuple<int,int> origen, tuple<int,int> destino);
+        pair<int,vector<Base>> obtenerRutaMasCorta(pair<int,int> origen, pair<int,int> destino);
+        pair<int,vector<Base>> obtenerBaseRemota(pair<int,int> origen);
+        float obtenerCostoRuta(char origen, char destino);
 };
 
 #endif

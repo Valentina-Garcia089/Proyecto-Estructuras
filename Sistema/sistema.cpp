@@ -1,8 +1,10 @@
 #include "tad_sistema.h"
 #include "../SecuenciaGenetica/tad_secuencia_genetica.h"
 #include "../arbolCodificacion/arbolCodificacion.h"
+#include "../grafoSecuencia/GrafoSecuencia.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <vector>
 #include <cstdint>
 
@@ -317,7 +319,6 @@ void Sistema::enmascararSecuencia(string subsecuencia) {
 
 
 
-
 void Sistema::codificarSecuencias(string nombreArchivo)
 {   
     if (nombreArchivo.find(".fabin") == string::npos) {
@@ -422,7 +423,6 @@ void Sistema::codificarSecuencias(string nombreArchivo)
     }
     salida.close();
 }
-
 
 
 
@@ -553,6 +553,9 @@ void Sistema::decodificarSecuencias(string nombreArchivo){
     cout << "Decodificación finalizada. Se cargaron " << conjuntoSecuencias.size() << " secuencias en memoria.\n";
 }
 
+
+
+
 void Sistema::arbolCodificacion(string nombreSecuencia){
     for(SecuenciaGenetica& recorre : conjuntoSecuencias){
         if(recorre.getNombre() == nombreSecuencia || recorre.getNombre() == nombreSecuencia + "\r"){
@@ -569,9 +572,14 @@ void Sistema::arbolCodificacion(string nombreSecuencia){
 }
 
 
+
+
 vector <SecuenciaGenetica> Sistema:: obtenerConjuntoSec(){
     return conjuntoSecuencias;
 }
+
+
+
 
 void Sistema::guardarSecuencias(string nombre_archivo) {
 
@@ -617,4 +625,96 @@ void Sistema::guardarSecuencias(string nombre_archivo) {
     } else {
         cout << "Se guardaron " << contador << " secuencias en " << nombre_archivo << ".\n";
     }
+}
+
+
+
+
+void Sistema::rutaMasCorta(string datos){
+    // Formato de datos: "nombreSecuencia i j x y"
+    istringstream iss(datos);
+    string nombreSecuencia;
+    int i, j, x, y;
+    iss >> nombreSecuencia >> i >> j >> x >> y;
+
+    pair<int,int> origen = make_pair(i,j);
+    pair<int,int> destino = make_pair(x,y);
+
+    for(SecuenciaGenetica& recorre : conjuntoSecuencias){
+        if(recorre.getNombre() == nombreSecuencia || recorre.getNombre() == nombreSecuencia + "\r"){
+            GrafoSecuencia grafo(recorre);
+
+            //TODO: Comentar esta linea cuando se arregle ruta mas corta
+                cout << recorre.getNombre() << endl;
+                grafo.mostrarMatrizAdyacencia();
+
+            //TODO: arreglar ruta mas corta
+            /* pair<int,vector<Base>> resultado = grafo.obtenerRutaMasCorta(origen, destino);
+            int costo = resultado.first;
+            vector<Base> ruta = resultado.second;
+
+            if (ruta.empty() && costo == -1) {
+                cout << "La base en la posición [i ,j ] no existe.\n";
+                return;
+            }
+
+            if (ruta.empty() && costo == -2) {
+                cout << "La base en la posición [x ,y ] no existe.\n";
+                return;
+            }
+
+            //TODO arreglar indices i,j,a,b y Nombres de bases (N, M)
+            cout << "Para la secuencia " + nombreSecuencia +", ";
+            cout << "la ruta más corta entre la base N en [i ,j ] ";
+            cout << "y la base M en [x ,y ] es: ";
+
+            for (Base& base : ruta) {
+                cout << base.obtenerBase() << " ";
+            }
+
+            cout << "El costo total de la ruta es: " << costo << "\n";
+            return; */
+        }
+    }
+    cout << "La secuencia " + nombreSecuencia + " no existe.\n";
+}
+
+
+
+
+void Sistema::baseRemota(string datos){
+    // Formato de datos: "nombreSecuencia i j"
+    istringstream iss(datos);
+    string nombreSecuencia;
+    int i, j;
+    iss >> nombreSecuencia >> i >> j;
+
+    for(SecuenciaGenetica& recorre : conjuntoSecuencias){
+        if(recorre.getNombre() == nombreSecuencia || recorre.getNombre() == nombreSecuencia + "\r"){
+            GrafoSecuencia grafo(recorre);
+            pair<int,vector<Base>> resultado = grafo.obtenerBaseRemota(make_pair(i,j));
+            int costo = resultado.first;
+            vector<Base> ruta = resultado.second;
+
+            if (ruta.empty() && costo == -1) {
+                cout << "La base en la posición [i ,j ] no existe.\n";
+                return;
+            }
+
+            //TODO arreglar indices i,j,a,b
+            cout << "Para la secuencia " + nombreSecuencia +", ";
+            cout << "la base remota está ubicada en [a ,b ], ";
+            cout << "y la ruta entre la base en [i ,j ] y";
+            cout << " la base remota en [a ,b ] es:";
+
+            //Impresion de la ruta
+            for (Base& base : ruta) {
+                cout << base.obtenerBase() << " ";
+            }
+
+            cout << "El costo total de la ruta es: " << costo << "\n";
+            return;
+        }
+    }
+    cout << "La secuencia " + nombreSecuencia + " no existe.\n";
 }

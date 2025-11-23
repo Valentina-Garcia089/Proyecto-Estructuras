@@ -6,6 +6,7 @@
 #include "Sistema/tad_sistema.h"
 
 
+
 using namespace std;
 
 int main () {
@@ -55,13 +56,17 @@ int main () {
                             sistemita.guardarSecuencias(argumento);
                             cout << "Las secuencias cargadas se guardaron en el archivo " << argumento << "\n";
                         } 
-                        //TODO: Cambiar a codificar/comprimir
-                        //TODO: Agregar a el menu de ayuda
                         else if (comando == "codificar" && !argumento.empty()){
                             sistemita.codificarSecuencias(argumento);
                         }
                         else if (comando == "decodificar" && !argumento.empty()){
                             sistemita.decodificarSecuencias(argumento);
+                        }
+                        else if (comando == "ruta_mas_corta" && !argumento.empty()){
+                            sistemita.rutaMasCorta(argumento);
+                        }
+                        else if (comando == "base_remota" && !argumento.empty()){
+                            sistemita.baseRemota(argumento);
                         }
                         else if(comando== "ayuda"){
                             comandoAyuda(argumento, 2);

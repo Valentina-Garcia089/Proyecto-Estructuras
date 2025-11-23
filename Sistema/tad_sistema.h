@@ -22,9 +22,10 @@ class Sistema {
         void enmascararSecuencia(string subsecuencia);
         void codificarSecuencias(string nombreArchivo);
         void decodificarSecuencias(string nombreArchivo);
-        //TODO: Cambiar a codificar/comprimir
         void arbolCodificacion(string nombreSecuencia);
         vector <SecuenciaGenetica> obtenerConjuntoSec();
+        void rutaMasCorta(string datos);
+        void baseRemota(string datos);
 };
 
 #endif

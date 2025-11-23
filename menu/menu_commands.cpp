@@ -30,7 +30,7 @@ void comandoAyuda(string argumento, int momento) {
 
     else if(momento == 2){
         if(argumento.empty()){
-            printf("Comandos disponibles: listar_secuencias, histograma, es_subsecuencia, enmascarar, codificar, decodificar, guardar, salir, ayuda\n");
+            printf("Comandos disponibles: listar_secuencias, histograma, es_subsecuencia, enmascarar, codificar, decodificar, guardar , ruta_mas_corta, base_remota, salir, ayuda\n");
         }
         else{
             if(argumento == "listar_secuencias"){
@@ -60,6 +60,18 @@ void comandoAyuda(string argumento, int momento) {
             else if (argumento == "decodificar"){
                 printf("Uso: decodificar <nombre_archivo>\n");
                 printf("Descripción: decodifica un archivo binario y carga las secuencias en memoria.\n");
+            } 
+            else if (argumento == "ruta_mas_corta"){
+                printf("Uso: ruta_mas_corta <descripcion_secuencia> <origen> <destino>\n");
+                printf("Descripción: obtiene la ruta más corta entre dos bases en la secuencia.\n");
+                printf("El origen y destino deben ser las posiciones (fila,columna) de las bases en la secuencia.\n");
+                printf("Ejemplo: ruta_mas_corta 0 0 2 3\n");
+            }
+            else if (argumento == "base_remota"){
+                printf("Uso: base_remota <descripcion_secuencia> <origen>\n");
+                printf("Descripción: obtiene la base más lejana desde una base origen en la secuencia.\n");
+                printf("El origen debe ser la posición (fila,columna) de la base en la secuencia.\n");
+                printf("Ejemplo: base_remota 0 0\n");
             }
             else{
                 comandoNoReconocido();

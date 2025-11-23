@@ -1,10 +1,10 @@
 # Comando para windows:
-# g++ -Wall -g -std=c++17 test_menu.cpp menu/menu_commands.cpp SecuenciaGenetica/base.cpp SecuenciaGenetica/secuencia_genetica.cpp arbolCodificacion/arbolCodificacion.cpp arbolCodificacion/nodoCodificacion.cpp Sistema/sistema.cpp  -o programa
+# g++ -Wall -g -std=c++17 test_menu.cpp menu/menu_commands.cpp SecuenciaGenetica/base.cpp SecuenciaGenetica/secuencia_genetica.cpp arbolCodificacion/arbolCodificacion.cpp arbolCodificacion/nodoCodificacion.cpp Sistema/sistema.cpp grafoSecuencia/GrafoSecuencia.cpp -o programa
 CC = g++
 CXXFLAGS = -Wall -g -std=c++17
 CPPFLAGS = -I.
 
-SRCS = test_menu.cpp menu/menu_commands.cpp Sistema/sistema.cpp SecuenciaGenetica/base.cpp SecuenciaGenetica/secuencia_genetica.cpp arbolCodificacion/arbolCodificacion.cpp arbolCodificacion/nodoCodificacion.cpp
+SRCS = test_menu.cpp menu/menu_commands.cpp Sistema/sistema.cpp SecuenciaGenetica/base.cpp SecuenciaGenetica/secuencia_genetica.cpp arbolCodificacion/arbolCodificacion.cpp arbolCodificacion/nodoCodificacion.cpp grafoSecuencia/GrafoSecuencia.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 TARGET = programa
