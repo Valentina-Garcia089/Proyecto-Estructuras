@@ -17,8 +17,8 @@ class GrafoSecuencia {
         GrafoSecuencia(SecuenciaGenetica &secuencia);
         void llenarMatrizAdyacencia();
         void mostrarMatrizAdyacencia();
-        pair<int,vector<Base>> obtenerRutaMasCorta(pair<int,int> origen, pair<int,int> destino);
-        pair<int,vector<Base>> obtenerBaseRemota(pair<int,int> origen);
+        pair<float, vector<pair<char, pair<int,int>>>> obtenerRutaMasCorta(pair<int,int> origen, pair<int,int> destino);
+        pair<float, vector<pair<char, pair<int,int>>>> obtenerBaseRemota(pair<int,int> origen);
         float obtenerCostoRuta(char origen, char destino);
 };
 

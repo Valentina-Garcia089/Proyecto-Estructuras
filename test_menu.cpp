@@ -63,7 +63,7 @@ int main () {
                             sistemita.decodificarSecuencias(argumento);
                         }
                         else if (comando == "ruta_mas_corta" && !argumento.empty()){
-                            sistemita.rutaMasCorta(argumento);
+                            sistemita.rutaMasCorta(linea.substr(15));
                         }
                         else if (comando == "base_remota" && !argumento.empty()){
                             sistemita.baseRemota(argumento);

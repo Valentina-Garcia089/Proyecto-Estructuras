@@ -634,46 +634,48 @@ void Sistema::rutaMasCorta(string datos){
     // Formato de datos: "nombreSecuencia i j x y"
     istringstream iss(datos);
     string nombreSecuencia;
-    int i, j, x, y;
-    iss >> nombreSecuencia >> i >> j >> x >> y;
+    string fil1, col1, fil2, col2;
+    cout << datos << endl;
+    iss >> nombreSecuencia >> fil1 >> col1 >> fil2 >> col2;
+
+    int i = atoi(fil1.c_str()), j = atoi(col1.c_str()), x = atoi(fil2.c_str()), y = atoi(col2.c_str());
 
     pair<int,int> origen = make_pair(i,j);
     pair<int,int> destino = make_pair(x,y);
+
+    /* printf("Origen: Fila %d Columna %d\n", i ,j);
+    printf("Destino :Fila %d Columna %d\n", x ,y); */
 
     for(SecuenciaGenetica& recorre : conjuntoSecuencias){
         if(recorre.getNombre() == nombreSecuencia || recorre.getNombre() == nombreSecuencia + "\r"){
             GrafoSecuencia grafo(recorre);
 
-            //TODO: Comentar esta linea cuando se arregle ruta mas corta
-                cout << recorre.getNombre() << endl;
-                grafo.mostrarMatrizAdyacencia();
-
             //TODO: arreglar ruta mas corta
-            /* pair<int,vector<Base>> resultado = grafo.obtenerRutaMasCorta(origen, destino);
-            int costo = resultado.first;
-            vector<Base> ruta = resultado.second;
+            pair<float, vector<pair<char, pair<int,int>>>> resultado = grafo.obtenerRutaMasCorta(origen, destino);
+            float costo = resultado.first;
+            vector<pair<char, pair<int,int>>> ruta = resultado.second;
 
             if (ruta.empty() && costo == -1) {
-                cout << "La base en la posición [i ,j ] no existe.\n";
+                printf("La base en la posición [%d ,%d ] no existe.\n", i, j);
                 return;
             }
 
             if (ruta.empty() && costo == -2) {
-                cout << "La base en la posición [x ,y ] no existe.\n";
+                printf("La base en la posición [%d ,%d ] no existe.\n", x, y);
                 return;
             }
 
             //TODO arreglar indices i,j,a,b y Nombres de bases (N, M)
             cout << "Para la secuencia " + nombreSecuencia +", ";
-            cout << "la ruta más corta entre la base N en [i ,j ] ";
-            cout << "y la base M en [x ,y ] es: ";
+            printf("la ruta más corta entre la base %c en [%d ,%d ] ", ruta.at(0), i, j);
+            printf("y la base M en [%d ,%d ] es: ", x ,y );
 
-            for (Base& base : ruta) {
-                cout << base.obtenerBase() << " ";
+            for (pair<char, pair<int,int>> &base : ruta) {
+                cout << base.first << " ";
             }
 
             cout << "El costo total de la ruta es: " << costo << "\n";
-            return; */
+            return;
         }
     }
     cout << "La secuencia " + nombreSecuencia + " no existe.\n";
