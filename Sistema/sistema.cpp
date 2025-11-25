@@ -667,8 +667,8 @@ void Sistema::rutaMasCorta(string datos){
 
             //TODO arreglar indices i,j,a,b y Nombres de bases (N, M)
             cout << "Para la secuencia " + nombreSecuencia +", ";
-            printf("la ruta más corta entre la base %c en [%d ,%d ] ", ruta.at(0), i, j);
-            printf("y la base M en [%d ,%d ] es: ", x ,y );
+            printf("la ruta más corta entre la base %c en [%d ,%d ] ", ruta.at(0).first, i, j);
+            printf("y la base %c en [%d ,%d ] es: ", (ruta.end())->first,x ,y );
 
             for (pair<char, pair<int,int>> &base : ruta) {
                 cout << base.first << " ";
@@ -687,31 +687,34 @@ void Sistema::rutaMasCorta(string datos){
 void Sistema::baseRemota(string datos){
     // Formato de datos: "nombreSecuencia i j"
     istringstream iss(datos);
-    string nombreSecuencia;
-    int i, j;
-    iss >> nombreSecuencia >> i >> j;
+    string nombreSecuencia, fil, col;
+    iss >> nombreSecuencia >> fil >> col;
+    int i = atoi(fil.c_str()), j = atoi(col.c_str());
 
     for(SecuenciaGenetica& recorre : conjuntoSecuencias){
         if(recorre.getNombre() == nombreSecuencia || recorre.getNombre() == nombreSecuencia + "\r"){
             GrafoSecuencia grafo(recorre);
-            pair<int,vector<Base>> resultado = grafo.obtenerBaseRemota(make_pair(i,j));
+            pair<float, vector<pair<char, pair<int,int>>>> resultado = grafo.obtenerBaseRemota(make_pair(i,j));
             int costo = resultado.first;
-            vector<Base> ruta = resultado.second;
+            vector<pair<char, pair<int,int>>> ruta = resultado.second;
 
             if (ruta.empty() && costo == -1) {
-                cout << "La base en la posición [i ,j ] no existe.\n";
+                printf("La base en la posición [%d ,%d ] no existe.\n", i ,j);
                 return;
             }
 
+            pair<int,int> coorBaseRemota = (ruta.rend())->second;
+            char baseRemota = (ruta.rend())->first;
+
             //TODO arreglar indices i,j,a,b
             cout << "Para la secuencia " + nombreSecuencia +", ";
-            cout << "la base remota está ubicada en [a ,b ], ";
-            cout << "y la ruta entre la base en [i ,j ] y";
-            cout << " la base remota en [a ,b ] es:";
+            printf("la base remota está ubicada en [%d ,%d ], ", coorBaseRemota.first, coorBaseRemota.second);
+            printf("y la ruta entre la base en [%d ,%d ] y", i, j);
+            printf(" la base remota en [%d ,%d ] es: %c", coorBaseRemota.first, coorBaseRemota.second, baseRemota);
 
             //Impresion de la ruta
-            for (Base& base : ruta) {
-                cout << base.obtenerBase() << " ";
+            for (pair<char, pair<int,int>> &base : ruta) {
+                cout << base.first << " ";
             }
 
             cout << "El costo total de la ruta es: " << costo << "\n";
