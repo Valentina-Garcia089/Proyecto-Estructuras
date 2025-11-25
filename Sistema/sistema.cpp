@@ -620,12 +620,18 @@ void Sistema::rutaMasCorta(string datos){
     cout << datos << endl;
     iss >> nombreSecuencia >> fil1 >> col1 >> fil2 >> col2;
 
-    if (isalnum(fil1[0]) || isalnum(col1[0]) || isalnum(fil2[0]) || isalnum(col2[0])) {
-        cout << "Coordenadas invalidas, deben ser numeros enteros.\n";
+    int i, j, x, y;
+
+    try{
+    i = stoi(fil1.c_str()); j = stoi(col1.c_str()); x = stoi(fil2.c_str()); y = stoi(col2.c_str());
+    } catch (const invalid_argument& ia) {
+        cout << "Coordenadas invalidas.\n";
+        return;
+    } catch (const std::out_of_range& oor) {
+        cout << "Coordenadas invalidas.\n";
         return;
     }
 
-    int i = atoi(fil1.c_str()), j = atoi(col1.c_str()), x = atoi(fil2.c_str()), y = atoi(col2.c_str());
 
     pair<int,int> origen = make_pair(i,j);
     pair<int,int> destino = make_pair(x,y);
@@ -676,12 +682,17 @@ void Sistema::baseRemota(string datos){
     string nombreSecuencia, fil, col;
     iss >> nombreSecuencia >> fil >> col;
 
-    if (isalnum(fil[0]) || isalnum(col[0])) {
-        cout << "Coordenadas invalidas, deben ser numeros enteros.\n";
+    int i, j;
+
+    try {
+    i = stoi(fil.c_str()); j = stoi(col.c_str());
+    } catch (const invalid_argument& ia) {
+        cout << "Coordenadas invalidas.\n";
+        return;
+    } catch (const std::out_of_range& oor) {
+        cout << "Coordenadas invalidas.\n";
         return;
     }
-
-    int i = atoi(fil.c_str()), j = atoi(col.c_str());
 
     cout << datos << endl;
     cout << "i: " << i << " j: " << j << endl;

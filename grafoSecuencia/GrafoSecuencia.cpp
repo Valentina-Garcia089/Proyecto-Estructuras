@@ -34,9 +34,10 @@ void GrafoSecuencia::llenarMatrizAdyacencia(){
             int fil = fila + movi[movimiento][0];
             int col = columna + movi[movimiento][1];
 
-            // validar límites reales
+            //validar límites reales
             if (fil < 0 || col < 0 || fil >= alto || col >= ancho) continue;
 
+            //Calcular el indice en la lista
             int indice = fil * ancho + col;
 
             if (indice >= 0 && indice < tam) {
@@ -63,65 +64,66 @@ pair<float, vector<pair<char, pair<int,int>>>> GrafoSecuencia::obtenerRutaMasCor
     int tam = nodos.size();
 
     // Coordenadas (fila, columna)
-    // Interpretamos el par de entrada como (fila, columna)
     int fila_origen = origen.first;
     int col_origen = origen.second;
 
     int fila_dest = destino.first;
     int col_dest = destino.second;
+
     // Validar coordenadas (no negativas)
     if (fila_origen < 0 || col_origen < 0) return pair<float, vector<pair<char, pair<int,int>>>>(-1.0f, {});
     if (fila_dest < 0 || col_dest < 0) return pair<float, vector<pair<char, pair<int,int>>>>(-2.0f, {});
 
-    // Convertir (fila, columna) a índice: idx = fila * ancho + columna
-    int idx_origen = fila_origen * ancho + col_origen;
-    int idx_dest = fila_dest * ancho + col_dest;
+    // Convertir coordenadas dadas a indices de la lista
+    int i_origen = fila_origen * ancho + col_origen;
+    int i_destino = fila_dest * ancho + col_dest;
 
-    if (idx_origen < 0 || idx_origen >= tam) return pair<float, vector<pair<char, pair<int,int>>>>(-1.0f, {});
-    if (idx_dest < 0 || idx_dest >= tam) return pair<float, vector<pair<char, pair<int,int>>>>(-2.0f, {});
+    //Validar que los indices esten correctos
+    if (i_origen < 0 || i_origen >= tam) return pair<float, vector<pair<char, pair<int,int>>>>(-1.0f, {});
+    if (i_destino < 0 || i_destino >= tam) return pair<float, vector<pair<char, pair<int,int>>>>(-2.0f, {});
 
-    // Dijkstra
+    //Algortimo Dijkstra 
     const float INF = 1e30f;
     vector<float> dist(tam, INF);
-    vector<int> prev(tam, -1);
-    vector<bool> visited(tam, false);
+    vector<int> anterior(tam, -1);
+    vector<bool> visitado(tam, false);
 
-    // min-heap (dist, node)
-    priority_queue<pair<float,int>, vector<pair<float,int>>, greater<pair<float,int>>> pq;
+    //Cola de prioridad
+    priority_queue<pair<float,int>, vector<pair<float,int>>, greater<pair<float,int>>> cola;
 
-    dist[idx_origen] = 0.0f;
-    pq.push({0.0f, idx_origen});
+    dist[i_origen] = 0.0f;
+    cola.push({0.0f, i_origen});
 
-    while (!pq.empty()) {
-        pair<float,int> front = pq.top(); 
-        pq.pop();
-        int u = front.second;
-        if (visited[u]) continue;
-        visited[u] = true;
-        if (u == idx_dest) break;
+    while (!cola.empty()) {
+        pair<float,int> front = cola.top(); 
+        cola.pop();
+        int indi = front.second;
+        if (visitado[indi]) continue;
+        visitado[indi] = true;
+        if (indi == i_destino) break;
 
         for (int v = 0; v < tam; ++v) {
-            float w = matrizAdyacencia[u][v];
-            if (w <= 0.0f) continue; // sin arista
-            if (visited[v]) continue;
-            float nd = dist[u] + w;
+            float w = matrizAdyacencia[indi][v];
+            if (w <= 0.0f) continue; // no existe arista
+            if (visitado[v]) continue;
+            float nd = dist[indi] + w;
             if (nd < dist[v]) {
                 dist[v] = nd;
-                prev[v] = u;
-                pq.push({nd, v});
+                anterior[v] = indi;
+                cola.push({nd, v});
             }
         }
     }
 
     
-    if (dist[idx_dest] == INF) {
+    if (dist[i_destino] == INF) {
         // No hay ruta entre origen y destino, devolver ruta vacía con costo 0
         return pair<float, vector<pair<char, pair<int,int>>>>(0.0f, {});
     }
 
     // Reconstruir camino
     vector<int> caminoIndices;
-    for (int at = idx_dest; at != -1; at = prev[at]) {
+    for (int at = i_destino; at != -1; at = anterior[at]) {
         caminoIndices.push_back(at);
     }
     reverse(caminoIndices.begin(), caminoIndices.end());
