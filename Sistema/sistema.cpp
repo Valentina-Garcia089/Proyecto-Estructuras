@@ -638,6 +638,11 @@ void Sistema::rutaMasCorta(string datos){
     cout << datos << endl;
     iss >> nombreSecuencia >> fil1 >> col1 >> fil2 >> col2;
 
+    if (isalpha(fil1[0]) || isalpha(col1[0]) || isalpha(fil2[0]) || isalpha(col2[0])) {
+        cout << "Coordenadas invalidas, deben ser numeros enteros.\n";
+        return;
+    }
+
     int i = atoi(fil1.c_str()), j = atoi(col1.c_str()), x = atoi(fil2.c_str()), y = atoi(col2.c_str());
 
     pair<int,int> origen = make_pair(i,j);
@@ -688,6 +693,12 @@ void Sistema::baseRemota(string datos){
     istringstream iss(datos);
     string nombreSecuencia, fil, col;
     iss >> nombreSecuencia >> fil >> col;
+
+    if (isalpha(fil[0]) || isalpha(col[0])) {
+        cout << "Coordenadas invalidas, deben ser numeros enteros.\n";
+        return;
+    }
+
     int i = atoi(fil.c_str()), j = atoi(col.c_str());
 
     cout << datos << endl;

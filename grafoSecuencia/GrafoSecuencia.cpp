@@ -23,26 +23,26 @@ void GrafoSecuencia::llenarMatrizAdyacencia(){
 
     for (int i = 0; i < tam; i++) {
 
-        int row = i / ancho;
-        int col = i % ancho;
+        int fila = i / ancho;
+        int columna = i % ancho;
 
         // movimientos arriba, abajo, izquierda, derecha
-        int movs[4][2] = { {-1,0}, {1,0}, {0,-1}, {0,1} };
+        int movi[4][2] = { {-1,0}, {1,0}, {0,-1}, {0,1} };
 
-        for (int k = 0; k < 4; k++) {
+        for (int movimiento = 0; movimiento < 4; movimiento++) {
 
-            int r = row + movs[k][0];
-            int c = col + movs[k][1];
+            int fil = fila + movi[movimiento][0];
+            int col = columna + movi[movimiento][1];
 
             // validar límites reales
-            if (r < 0 || c < 0 || r >= alto || c >= ancho) continue;
+            if (fil < 0 || col < 0 || fil >= alto || col >= ancho) continue;
 
-            int idx = r * ancho + c;
+            int indice = fil * ancho + col;
 
-            if (idx >= 0 && idx < tam) {
-                float costo = obtenerCostoRuta(nodos[i], nodos[idx]);
-                matrizAdyacencia[i][idx] = costo;
-                matrizAdyacencia[idx][i] = costo;  // conexión bidireccional
+            if (indice >= 0 && indice < tam) {
+                float costo = obtenerCostoRuta(nodos[i], nodos[indice]);
+                matrizAdyacencia[i][indice] = costo;
+                matrizAdyacencia[indice][i] = costo;  // conexion bidireccional / grafo no dirigido
             }
         }
     }
