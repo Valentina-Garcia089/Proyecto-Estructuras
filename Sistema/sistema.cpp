@@ -638,7 +638,7 @@ void Sistema::rutaMasCorta(string datos){
     cout << datos << endl;
     iss >> nombreSecuencia >> fil1 >> col1 >> fil2 >> col2;
 
-    if (isalpha(fil1[0]) || isalpha(col1[0]) || isalpha(fil2[0]) || isalpha(col2[0])) {
+    if (isalnum(fil1[0]) || isalnum(col1[0]) || isalnum(fil2[0]) || isalnum(col2[0])) {
         cout << "Coordenadas invalidas, deben ser numeros enteros.\n";
         return;
     }
@@ -694,7 +694,7 @@ void Sistema::baseRemota(string datos){
     string nombreSecuencia, fil, col;
     iss >> nombreSecuencia >> fil >> col;
 
-    if (isalpha(fil[0]) || isalpha(col[0])) {
+    if (isalnum(fil[0]) || isalnum(col[0])) {
         cout << "Coordenadas invalidas, deben ser numeros enteros.\n";
         return;
     }
