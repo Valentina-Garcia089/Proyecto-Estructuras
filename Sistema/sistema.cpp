@@ -650,7 +650,6 @@ void Sistema::rutaMasCorta(string datos){
         if(recorre.getNombre() == nombreSecuencia || recorre.getNombre() == nombreSecuencia + "\r"){
             GrafoSecuencia grafo(recorre);
 
-            //TODO: arreglar ruta mas corta
             pair<float, vector<pair<char, pair<int,int>>>> resultado = grafo.obtenerRutaMasCorta(origen, destino);
             float costo = resultado.first;
             vector<pair<char, pair<int,int>>> ruta = resultado.second;
@@ -665,7 +664,6 @@ void Sistema::rutaMasCorta(string datos){
                 return;
             }
 
-            //TODO arreglar indices i,j,a,b y Nombres de bases (N, M)
             cout << "Para la secuencia " + nombreSecuencia +", ";
             printf("la ruta más corta entre la base %c en [%d ,%d ] ", ruta.at(0).first, i, j);
             printf("y la base %c en [%d ,%d ] es: \n", ruta.back().first,x ,y );
@@ -710,7 +708,6 @@ void Sistema::baseRemota(string datos){
             pair<int,int> coorBaseRemota = ruta.back().second;
             char baseRemota = ruta.back().first;
 
-            //TODO arreglar indices i,j,a,b
             cout << "Para la secuencia " + nombreSecuencia +", ";
             printf("la base remota está ubicada en [%d ,%d ], ", coorBaseRemota.first, coorBaseRemota.second);
             printf("y la ruta entre la base en [%d ,%d ] y ", i, j);
@@ -718,7 +715,8 @@ void Sistema::baseRemota(string datos){
 
             //Impresion de la ruta
             for (pair<char, pair<int,int>> &base : ruta) {
-                printf("-> %c [%d , %d] ", base.first, base.second.first, base.second.second);
+                //printf(" -> %c [%d , %d] ", base.first, base.second.first, base.second.second);
+                printf(" -> %c", base.first);
             }
 
             cout << "\nEl costo total de la ruta es: " << costo << "\n";
