@@ -106,14 +106,14 @@ pair<float, vector<pair<char, pair<int,int>>>> GrafoSecuencia::obtenerRutaMasCor
         if (indi == i_destino) break;
 
         for (int v = 0; v < tam; ++v) {
-            float w = matrizAdyacencia[indi][v];
-            if (w <= 0.0f) continue; // no existe arista
+            float peso = matrizAdyacencia[indi][v];
+            if (peso <= 0.0f) continue; // no existe arista
             if (visitado[v]) continue;
-            float nd = dist[indi] + w;
-            if (nd < dist[v]) {
-                dist[v] = nd;
+            float total = dist[indi] + peso;
+            if (total < dist[v]) {
+                dist[v] = total;
                 anterior[v] = indi;
-                cola.push({nd, v});
+                cola.push({total, v});
             }
         }
     }
@@ -161,71 +161,70 @@ GrafoSecuencia::obtenerBaseRemota(pair<int,int> origen)
     int fila_origen = origen.first;
     int col_origen  = origen.second;
 
-    if (fila_origen < 0 || col_origen < 0 || 
-        fila_origen >= alto || col_origen >= ancho)
+    if (fila_origen < 0 || col_origen < 0 || fila_origen >= alto || col_origen >= ancho)
     {
         return pair<float, vector<pair<char, pair<int,int>>>>(-1.0f, vector<pair<char, pair<int,int>>>());
     }
 
-    int idx_origen = fila_origen * ancho + col_origen;
-    char base = nodos[idx_origen];
+    int indic_origen = fila_origen * ancho + col_origen;
+    char base = nodos[indic_origen];
 
     const float INF = 1e30f;
     vector<float> dist(tam, INF);
-    vector<int> prev(tam, -1);
-    vector<bool> visited(tam, false);
+    vector<int> anterior(tam, -1);
+    vector<bool> visitado(tam, false);
 
-    priority_queue<pair<float,int>, vector<pair<float,int>>, greater<pair<float,int>>> pq;
+    priority_queue<pair<float,int>, vector<pair<float,int>>, greater<pair<float,int>>> cola;
 
-    dist[idx_origen] = 0.0f;
-    pq.push(pair<float,int>(0.0f, idx_origen));
+    dist[indic_origen] = 0.0f;
+    cola.push(pair<float,int>(0.0f, indic_origen));
 
     // Dijkstra para todos
-    while (!pq.empty()) {
+    while (!cola.empty()) {
 
-        pair<float,int> top = pq.top();
-        pq.pop();
+        pair<float,int> top = cola.top();
+        cola.pop();
 
-        int u = top.second;
-        if (visited[u]) continue;
-        visited[u] = true;
+        int ind = top.second;
+        if (visitado[ind]) continue;
+        visitado[ind] = true;
 
         for (int v = 0; v < tam; v++) {
 
-            float w = matrizAdyacencia[u][v];
-            if (w <= 0.0f) continue;
+            float peso = matrizAdyacencia[ind][v];
+            if (peso <= 0.0f) continue;
 
-            float nd = dist[u] + w;
+            float total = dist[ind] + peso;
 
-            if (nd < dist[v]) {
-                dist[v] = nd;
-                prev[v] = u;
-                pq.push(pair<float,int>(nd, v));
+            if (total < dist[v]) {
+                dist[v] = total;
+                anterior[v] = ind;
+                cola.push(pair<float,int>(total, v));
             }
         }
     }
 
-    // Buscar la base con la misma letra MÁS LEJANA (mayor costo acumulado)
-    int idx_remoto = -1;
+    // Buscar la base con la misma letra y mayor costo
+    int ind_remota = -1;
     float max_dist = -1.0f;
 
     for (int i = 0; i < tam; i++) {
-        if (i == idx_origen) continue;
+        if (i == indic_origen) continue;
         if (nodos[i] == base && dist[i] != INF) {
             if (dist[i] > max_dist) {
                 max_dist = dist[i];
-                idx_remoto = i;
+                ind_remota = i;
             }
         }
     }
 
-    if (idx_remoto == -1) {
+    if (ind_remota == -1) {
         return pair<float, vector<pair<char, pair<int,int>>>>(-2.0f, vector<pair<char, pair<int,int>>>());
     }
 
     // Reconstrucción del camino
     vector<int> camino;
-    for (int at = idx_remoto; at != -1; at = prev[at]) {
+    for (int at = ind_remota; at != -1; at = anterior[at]) {
         camino.push_back(at);
     }
     reverse(camino.begin(), camino.end());
