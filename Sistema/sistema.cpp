@@ -668,7 +668,7 @@ void Sistema::rutaMasCorta(string datos){
             //TODO arreglar indices i,j,a,b y Nombres de bases (N, M)
             cout << "Para la secuencia " + nombreSecuencia +", ";
             printf("la ruta más corta entre la base %c en [%d ,%d ] ", ruta.at(0).first, i, j);
-            printf("y la base %c en [%d ,%d ] es: \n", (ruta.end())->first,x ,y );
+            printf("y la base %c en [%d ,%d ] es: \n", ruta.back().first,x ,y );
 
             for (pair<char, pair<int,int>> &base : ruta) {
                 //printf(" -> %c [%d , %d] ", base.first, base.second.first, base.second.second);
@@ -692,11 +692,14 @@ void Sistema::baseRemota(string datos){
     iss >> nombreSecuencia >> fil >> col;
     int i = atoi(fil.c_str()), j = atoi(col.c_str());
 
+    cout << datos << endl;
+    cout << "i: " << i << " j: " << j << endl;
+
     for(SecuenciaGenetica& recorre : conjuntoSecuencias){
         if(recorre.getNombre() == nombreSecuencia || recorre.getNombre() == nombreSecuencia + "\r"){
             GrafoSecuencia grafo(recorre);
             pair<float, vector<pair<char, pair<int,int>>>> resultado = grafo.obtenerBaseRemota(make_pair(i,j));
-            int costo = resultado.first;
+            float costo = resultado.first;
             vector<pair<char, pair<int,int>>> ruta = resultado.second;
 
             if (ruta.empty() && costo == -1) {
@@ -704,8 +707,8 @@ void Sistema::baseRemota(string datos){
                 return;
             }
 
-            pair<int,int> coorBaseRemota = (ruta.rend())->second;
-            char baseRemota = (ruta.rend())->first;
+            pair<int,int> coorBaseRemota = ruta.back().second;
+            char baseRemota = ruta.back().first;
 
             //TODO arreglar indices i,j,a,b
             cout << "Para la secuencia " + nombreSecuencia +", ";

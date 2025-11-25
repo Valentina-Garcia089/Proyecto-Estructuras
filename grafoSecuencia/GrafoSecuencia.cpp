@@ -147,10 +147,93 @@ pair<float, vector<pair<char, pair<int,int>>>> GrafoSecuencia::obtenerRutaMasCor
     return pair<float, vector<pair<char, pair<int,int>>>>(costoEntero, ruta);
 }
 
-pair<float, vector<pair<char, pair<int,int>>>> GrafoSecuencia::obtenerBaseRemota(pair<int,int> origen){
-    // TODO: implementar según la especificación requerida
-    return pair<float, vector<pair<char, pair<int,int>>>>(0.0f, {});
+pair<float, vector<pair<char, pair<int,int>>>> 
+GrafoSecuencia::obtenerBaseRemota(pair<int,int> origen)
+{
+    int tam = nodos.size();
+
+    // Validar coordenadas de origen
+    int fila_origen = origen.first;
+    int col_origen  = origen.second;
+
+    if (fila_origen < 0 || col_origen < 0 || 
+        fila_origen >= alto || col_origen >= ancho)
+    {
+        return pair<float, vector<pair<char, pair<int,int>>>>(-1.0f, vector<pair<char, pair<int,int>>>());
+    }
+
+    int idx_origen = fila_origen * ancho + col_origen;
+    char base = nodos[idx_origen];
+
+    const float INF = 1e30f;
+    vector<float> dist(tam, INF);
+    vector<int> prev(tam, -1);
+    vector<bool> visited(tam, false);
+
+    priority_queue<pair<float,int>, vector<pair<float,int>>, greater<pair<float,int>>> pq;
+
+    dist[idx_origen] = 0.0f;
+    pq.push(pair<float,int>(0.0f, idx_origen));
+
+    // Dijkstra para todos
+    while (!pq.empty()) {
+
+        pair<float,int> top = pq.top();
+        pq.pop();
+
+        int u = top.second;
+        if (visited[u]) continue;
+        visited[u] = true;
+
+        for (int v = 0; v < tam; v++) {
+
+            float w = matrizAdyacencia[u][v];
+            if (w <= 0.0f) continue;
+
+            float nd = dist[u] + w;
+
+            if (nd < dist[v]) {
+                dist[v] = nd;
+                prev[v] = u;
+                pq.push(pair<float,int>(nd, v));
+            }
+        }
+    }
+
+    // Buscar la base con la misma letra MÁS LEJANA (mayor costo acumulado)
+    int idx_remoto = -1;
+    float max_dist = -1.0f;
+
+    for (int i = 0; i < tam; i++) {
+        if (i == idx_origen) continue;
+        if (nodos[i] == base && dist[i] != INF) {
+            if (dist[i] > max_dist) {
+                max_dist = dist[i];
+                idx_remoto = i;
+            }
+        }
+    }
+
+    if (idx_remoto == -1) {
+        return pair<float, vector<pair<char, pair<int,int>>>>(-2.0f, vector<pair<char, pair<int,int>>>());
+    }
+
+    // Reconstrucción del camino
+    vector<int> camino;
+    for (int at = idx_remoto; at != -1; at = prev[at]) {
+        camino.push_back(at);
+    }
+    reverse(camino.begin(), camino.end());
+
+    vector<pair<char, pair<int,int>>> ruta;
+    for (int k = 0; k < (int)camino.size(); k++) {
+        int id = camino[k];
+        ruta.push_back(pair<char, pair<int,int>>(nodos[id], pair<int,int>(id / ancho, id % ancho)));
+    }
+
+    return pair<float, vector<pair<char, pair<int,int>>>>(max_dist, ruta);
 }
+
 
 float GrafoSecuencia::obtenerCostoRuta(char origen, char destino){
     

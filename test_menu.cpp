@@ -66,7 +66,7 @@ int main () {
                             sistemita.rutaMasCorta(linea.substr(15));
                         }
                         else if (comando == "base_remota" && !argumento.empty()){
-                            sistemita.baseRemota(argumento);
+                            sistemita.baseRemota(linea.substr(12));
                         }
                         else if(comando== "ayuda"){
                             comandoAyuda(argumento, 2);
