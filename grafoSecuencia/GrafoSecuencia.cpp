@@ -74,6 +74,9 @@ pair<float, vector<pair<char, pair<int,int>>>> GrafoSecuencia::obtenerRutaMasCor
     if (fila_origen < 0 || col_origen < 0) return pair<float, vector<pair<char, pair<int,int>>>>(-1.0f, {});
     if (fila_dest < 0 || col_dest < 0) return pair<float, vector<pair<char, pair<int,int>>>>(-2.0f, {});
 
+    if (fila_origen >= alto || col_origen >= ancho) return pair<float, vector<pair<char, pair<int,int>>>>(-1.0f, {});
+    if (fila_dest >= alto || col_dest >= ancho) return pair<float, vector<pair<char, pair<int,int>>>>(-2.0f, {});
+
     // Convertir coordenadas dadas a indices de la lista
     int i_origen = fila_origen * ancho + col_origen;
     int i_destino = fila_dest * ancho + col_dest;
@@ -117,7 +120,7 @@ pair<float, vector<pair<char, pair<int,int>>>> GrafoSecuencia::obtenerRutaMasCor
 
     
     if (dist[i_destino] == INF) {
-        // No hay ruta entre origen y destino, devolver ruta vacía con costo 0
+        // no hay ruta entre origen y destino
         return pair<float, vector<pair<char, pair<int,int>>>>(0.0f, {});
     }
 
@@ -138,7 +141,7 @@ pair<float, vector<pair<char, pair<int,int>>>> GrafoSecuencia::obtenerRutaMasCor
 
     // Calcular costo total como suma de pesos (float). Retornamos un int escalado para preservar fracciones.
     float costoTotal = 0.0f;
-    for (size_t k = 1; k < caminoIndices.size(); ++k) {
+    for (size_t k = 1; k < caminoIndices.size(); k++) {
         int a = caminoIndices[k-1];
         int b = caminoIndices[k];
         costoTotal += matrizAdyacencia[a][b];
