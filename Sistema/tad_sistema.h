@@ -22,7 +22,6 @@ class Sistema {
         void enmascararSecuencia(string subsecuencia);
         void codificarSecuencias(string nombreArchivo);
         void decodificarSecuencias(string nombreArchivo);
-        void arbolCodificacion(string nombreSecuencia);
         vector <SecuenciaGenetica> obtenerConjuntoSec();
         void rutaMasCorta(string datos);
         void baseRemota(string datos);
