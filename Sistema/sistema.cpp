@@ -668,13 +668,14 @@ void Sistema::rutaMasCorta(string datos){
             //TODO arreglar indices i,j,a,b y Nombres de bases (N, M)
             cout << "Para la secuencia " + nombreSecuencia +", ";
             printf("la ruta más corta entre la base %c en [%d ,%d ] ", ruta.at(0).first, i, j);
-            printf("y la base %c en [%d ,%d ] es: ", (ruta.end())->first,x ,y );
+            printf("y la base %c en [%d ,%d ] es: \n", (ruta.end())->first,x ,y );
 
             for (pair<char, pair<int,int>> &base : ruta) {
-                cout << base.first << " ";
+                //printf(" -> %c [%d , %d] ", base.first, base.second.first, base.second.second);
+                printf(" -> %c", base.first);
             }
 
-            cout << "El costo total de la ruta es: " << costo << "\n";
+            cout << "\nEl costo total de la ruta es: " << costo << "\n";
             return;
         }
     }
@@ -709,15 +710,15 @@ void Sistema::baseRemota(string datos){
             //TODO arreglar indices i,j,a,b
             cout << "Para la secuencia " + nombreSecuencia +", ";
             printf("la base remota está ubicada en [%d ,%d ], ", coorBaseRemota.first, coorBaseRemota.second);
-            printf("y la ruta entre la base en [%d ,%d ] y", i, j);
-            printf(" la base remota en [%d ,%d ] es: %c", coorBaseRemota.first, coorBaseRemota.second, baseRemota);
+            printf("y la ruta entre la base en [%d ,%d ] y ", i, j);
+            printf("la base remota en [%d ,%d ] es: %c \n", coorBaseRemota.first, coorBaseRemota.second, baseRemota);
 
             //Impresion de la ruta
             for (pair<char, pair<int,int>> &base : ruta) {
-                cout << base.first << " ";
+                printf("-> %c [%d , %d] ", base.first, base.second.first, base.second.second);
             }
 
-            cout << "El costo total de la ruta es: " << costo << "\n";
+            cout << "\nEl costo total de la ruta es: " << costo << "\n";
             return;
         }
     }

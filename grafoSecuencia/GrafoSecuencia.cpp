@@ -17,66 +17,32 @@ GrafoSecuencia::GrafoSecuencia(SecuenciaGenetica &secuencia){
 
 void GrafoSecuencia::llenarMatrizAdyacencia(){
     if (ancho <= 0) return;
-    int tam = nodos.size();
-    matrizAdyacencia.assign(tam, vector<float>(tam, 0));
 
-    for (int i = 0; i < tam; ++i) {
+    int tam = nodos.size();
+    matrizAdyacencia.assign(tam, vector<float>(tam, 0.0f));
+
+    for (int i = 0; i < tam; i++) {
+
         int row = i / ancho;
         int col = i % ancho;
 
-        // Arriba
-        {
-            int r = row - 1;
-            int c = col;
-            if (r >= 0 && c >= 0) {
-                int idx = r * ancho + c;
-                if (idx >= 0 && idx < tam) {
-                    float costo = obtenerCostoRuta(nodos[i], nodos[idx]);
-                    matrizAdyacencia[i][idx] = costo;
-                    matrizAdyacencia[idx][i] = costo;
-                }
-            }
-        }
+        // movimientos arriba, abajo, izquierda, derecha
+        int movs[4][2] = { {-1,0}, {1,0}, {0,-1}, {0,1} };
 
-        // Abajo
-        {
-            int r = row + 1;
-            int c = col;
-            if (r >= 0 && c >= 0) {
-                int idx = r * ancho + c;
-                if (idx >= 0 && idx < tam) {
-                    float costo = obtenerCostoRuta(nodos[i], nodos[idx]);
-                    matrizAdyacencia[i][idx] = costo;
-                    matrizAdyacencia[idx][i] = costo;
-                }
-            }
-        }
+        for (int k = 0; k < 4; k++) {
 
-        // Izquierda
-        {
-            int r = row;
-            int c = col - 1;
-            if (r >= 0 && c >= 0) {
-                int idx = r * ancho + c;
-                if (idx >= 0 && idx < tam) {
-                    float costo = obtenerCostoRuta(nodos[i], nodos[idx]);
-                    matrizAdyacencia[i][idx] = costo;
-                    matrizAdyacencia[idx][i] = costo;
-                }
-            }
-        }
+            int r = row + movs[k][0];
+            int c = col + movs[k][1];
 
-        // Derecha
-        {
-            int r = row;
-            int c = col + 1;
-            if (r >= 0 && c >= 0) {
-                int idx = r * ancho + c;
-                if (idx >= 0 && idx < tam) {
-                    float costo = obtenerCostoRuta(nodos[i], nodos[idx]);
-                    matrizAdyacencia[i][idx] = costo;
-                    matrizAdyacencia[idx][i] = costo;
-                }
+            // validar límites reales
+            if (r < 0 || c < 0 || r >= alto || c >= ancho) continue;
+
+            int idx = r * ancho + c;
+
+            if (idx >= 0 && idx < tam) {
+                float costo = obtenerCostoRuta(nodos[i], nodos[idx]);
+                matrizAdyacencia[i][idx] = costo;
+                matrizAdyacencia[idx][i] = costo;  // conexión bidireccional
             }
         }
     }
@@ -85,7 +51,7 @@ void GrafoSecuencia::llenarMatrizAdyacencia(){
 void GrafoSecuencia::mostrarMatrizAdyacencia(){
     vector<vector<float>>::iterator fila = matrizAdyacencia.begin();
     vector<float>::iterator columna;
-    for(fila; fila != matrizAdyacencia.end(); fila++){
+    for(; fila != matrizAdyacencia.end(); fila++){
         for(columna = fila->begin(); columna != fila->end(); columna++){
             cout << setw(2) << setprecision(2) << *columna << " ";
         }
@@ -127,8 +93,8 @@ pair<float, vector<pair<char, pair<int,int>>>> GrafoSecuencia::obtenerRutaMasCor
     pq.push({0.0f, idx_origen});
 
     while (!pq.empty()) {
-        auto front = pq.top(); pq.pop();
-        float d = front.first;
+        pair<float,int> front = pq.top(); 
+        pq.pop();
         int u = front.second;
         if (visited[u]) continue;
         visited[u] = true;
